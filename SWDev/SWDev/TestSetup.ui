@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1015</width>
+    <width>868</width>
     <height>191</height>
    </rect>
   </property>
@@ -1842,7 +1842,7 @@ font: 10pt &quot;Arial&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1015</width>
+     <width>868</width>
      <height>23</height>
     </rect>
    </property>
@@ -1894,6 +1894,8 @@ font: 10pt &quot;Arial&quot;;</string>
     <property name="title">
      <string>Show</string>
     </property>
+    <addaction name="actionPeak_Valley"/>
+    <addaction name="actionDispLoad"/>
    </widget>
    <addaction name="menuTest_File"/>
    <addaction name="menuEdit"/>
@@ -1923,6 +1925,16 @@ font: 10pt &quot;Arial&quot;;</string>
   <action name="actionSet_Lock">
    <property name="text">
     <string>Set Lock</string>
+   </property>
+  </action>
+  <action name="actionPeak_Valley">
+   <property name="text">
+    <string>Peak/Valley</string>
+   </property>
+  </action>
+  <action name="actionDispLoad">
+   <property name="text">
+    <string>DispLoad</string>
    </property>
   </action>
  </widget>

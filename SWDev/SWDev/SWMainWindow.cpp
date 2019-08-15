@@ -6,8 +6,10 @@
 SWMainWindow::SWMainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, m_testSetupView(this)
-	, m_testGroupView(this)
+	/*, m_testGroupView(this)
 	, m_waveFormView(this)
+	, m_peakValleyView(this)
+	, m_dispLoadAxialView(this)*/
 {
 	ui.setupUi(this);
 
@@ -16,13 +18,16 @@ SWMainWindow::SWMainWindow(QWidget *parent)
 	setMinimumSize(QSize(rect.width(), rect.height()));
 
 	InitCommunication();
+
 }
 
 void SWMainWindow::InitView()
 {
 	m_testSetupView.show();
-	m_testGroupView.show();
+	/*m_testGroupView.show();
 	m_waveFormView.show();
+	m_peakValleyView.show();
+	m_dispLoadAxialView.show();*/
 }
 
 void SWMainWindow::InitCommunication()
@@ -58,4 +63,9 @@ void SWMainWindow::InitCommunication()
 	unsigned char command[3] = { 0x43,0x52,0x0D };
 	memcpy(message.m_downlinkData, command, 3);
 	pInstance->SendDownlinnkMessage(message);*/
+}
+
+void SWMainWindow::CreateConnection()
+{
+	//connect(ui.actionPeak_Valley,SIGNAL())
 }

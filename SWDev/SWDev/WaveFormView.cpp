@@ -103,7 +103,7 @@ void WaveFormView::Paint()
 	//画上x轴刻度线
 
 	//画远点
-	painter.drawText(pointx,pointy + 10, QString::number(0));
+	painter.drawText(pointx,pointy + 20, QString::number(0));
 	for (int i = 0; i < 10; i++)//分成10份
 	{
 		//选取合适的坐标，绘制一段长度为4的直线，用于表示刻度

@@ -48,6 +48,12 @@
     <ClCompile Include="ReceiveDataManage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PeakValleyView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DispLoadAxialView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="SWMainWindow.h">
@@ -62,6 +68,12 @@
     <QtMoc Include="WaveFormView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="PeakValleyView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DispLoadAxialView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="SWMainWindow.ui">
@@ -74,6 +86,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="WaveForm.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="PeakValley.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="DispLoadAxial.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

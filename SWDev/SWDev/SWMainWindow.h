@@ -5,6 +5,8 @@
 #include "TestSetupView.h"
 #include "TestSatusGroup.h"
 #include "WaveFormView.h"
+#include "PeakValleyView.h"
+#include "DispLoadAxialView.h"
 
 #include "SWCommunication.h"
 #include "ReceiveDataManage.h"
@@ -21,6 +23,8 @@ public:
 private:
 	void InitCommunication();
 
+	void CreateConnection();
+
 private:
 	Ui::SWMainWindowClass ui;
 
@@ -28,6 +32,8 @@ private:
 
 
 	TestSetupView m_testSetupView;
-	TestSatusGroupView m_testGroupView;
+	/*TestSatusGroupView m_testGroupView;
 	WaveFormView m_waveFormView;
+	PeakValleyView m_peakValleyView;
+	DispLoadAxialView m_dispLoadAxialView;*/
 };
