@@ -6,28 +6,18 @@
 SWMainWindow::SWMainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, m_testSetupView(this)
-	/*, m_testGroupView(this)
-	, m_waveFormView(this)
-	, m_peakValleyView(this)
-	, m_dispLoadAxialView(this)*/
 {
 	ui.setupUi(this);
 
 	QRect rect = QApplication::desktop()->screenGeometry();
-	//setFixedSize(rect.width(), rect.height());
 	setMinimumSize(QSize(rect.width(), rect.height()));
 
 	InitCommunication();
-
 }
 
 void SWMainWindow::InitView()
 {
 	m_testSetupView.show();
-	/*m_testGroupView.show();
-	m_waveFormView.show();
-	m_peakValleyView.show();
-	m_dispLoadAxialView.show();*/
 }
 
 void SWMainWindow::InitCommunication()
@@ -37,8 +27,6 @@ void SWMainWindow::InitCommunication()
 	pInstance->InitializeCommunication("COM1", "9600");
 	pInstance->SetIReceiveData(&m_receiveDataManage);
 
-
-	
 	pInstance->RDDMData(200);
 	pInstance->RDSDMData(200, 3);
 
@@ -53,9 +41,6 @@ void SWMainWindow::InitCommunication()
 	pInstance->WRSDMData(200, datalist);
 
 
-
-
-
 	//init device
 	pInstance->StartCommunication();
 	/*DownlinkMessage message;
@@ -67,5 +52,5 @@ void SWMainWindow::InitCommunication()
 
 void SWMainWindow::CreateConnection()
 {
-	//connect(ui.actionPeak_Valley,SIGNAL())
+
 }

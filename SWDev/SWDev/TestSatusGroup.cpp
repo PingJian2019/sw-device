@@ -5,7 +5,7 @@ TestSatusGroupView::TestSatusGroupView(QWidget * parent /* = NULL */)
 {
 	ui.setupUi(this);
 	
-	move(15, 265);
+	move(3, 265);
 	setFixedSize(1100, 80);
 
 	/*setWindowFlags((this->windowFlags()) &

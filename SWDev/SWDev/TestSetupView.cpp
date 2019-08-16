@@ -9,15 +9,15 @@ TestSetupView::TestSetupView(QWidget * parent /* = NULL */)
 {
 	ui.setupUi(this);
 
-	move(15, 50);
+	move(3, 50);
 	setFixedSize(1100, 180);
 	
 	setWindowFlags((this->windowFlags()) & (~Qt::WindowCloseButtonHint) &
 		(~Qt::WindowMaximizeButtonHint) & (~Qt::WindowMinimizeButtonHint));
 
+
 	InitView();
 	InitMoverTable();
-
 	CreateConnection();
 }
 

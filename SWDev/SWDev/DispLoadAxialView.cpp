@@ -5,8 +5,8 @@ DispLoadAxialView::DispLoadAxialView(QWidget * parent)
 {
 	ui.setupUi(this);
 
-	move(1135, 350);
-	setFixedSize(200, 250);
+	move(1107, 250);
+	setFixedSize(240, 180);
 
 	setWindowFlags((this->windowFlags()) &
 		(~Qt::WindowMaximizeButtonHint) & (~Qt::WindowMinimizeButtonHint));

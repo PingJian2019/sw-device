@@ -11,7 +11,7 @@ WaveFormView::WaveFormView(QWidget * parent /* = NULL */)
 {
 	ui.setupUi(this);
 
-	move(15, 290);
+	move(3, 290);
 	setFixedSize(1100, 400);
 
 	setWindowFlags((this->windowFlags()) & (~Qt::WindowCloseButtonHint));
