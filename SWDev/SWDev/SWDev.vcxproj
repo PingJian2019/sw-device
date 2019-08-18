@@ -113,25 +113,36 @@
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AdjustMoverDlgView.cpp" />
     <ClCompile Include="DispLoadAxialView.cpp" />
+    <ClCompile Include="LimitsDlgView.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PeakValleyView.cpp" />
+    <ClCompile Include="PresetPropDlgView.cpp" />
     <ClCompile Include="ReceiveDataManage.cpp" />
     <ClCompile Include="SWMainWindow.cpp" />
     <ClCompile Include="TestSatusGroup.cpp" />
     <ClCompile Include="TestSetupView.cpp" />
+    <ClCompile Include="UnderPeakDlgView.cpp" />
+    <ClCompile Include="WaveFormSetupDlgView.cpp" />
     <ClCompile Include="WaveFormView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="SWMainWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="AdjustMoverDlg.ui" />
     <QtUic Include="DispLoadAxial.ui" />
+    <QtUic Include="LimitsDlg.ui" />
     <QtUic Include="PeakValley.ui" />
+    <QtUic Include="PresetPropDlg.ui" />
+    <QtUic Include="SineWaveSetup.ui" />
     <QtUic Include="SWMainWindow.ui" />
     <QtUic Include="TestSatusGroup.ui" />
     <QtUic Include="TestSetup.ui" />
+    <QtUic Include="UnderPeakDlg.ui" />
     <QtUic Include="WaveForm.ui" />
+    <QtUic Include="WaveFormSetupDlg.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="SWMainWindow.qrc" />
@@ -155,6 +166,10 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdjustMoverDlgView.h" />
+    <ClInclude Include="PresetPropDlgView.h" />
+    <ClInclude Include="UnderPeakDlgView.h" />
+    <ClInclude Include="WaveFormSetupDlgView.h" />
     <QtMoc Include="PeakValleyView.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
@@ -163,6 +178,7 @@
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
     </QtMoc>
+    <ClInclude Include="LimitsDlgView.h" />
     <ClInclude Include="ReceiveDataManage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

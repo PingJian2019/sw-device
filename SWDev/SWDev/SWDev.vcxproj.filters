@@ -54,6 +54,21 @@
     <ClCompile Include="DispLoadAxialView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LimitsDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UnderPeakDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AdjustMoverDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PresetPropDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveFormSetupDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="SWMainWindow.h">
@@ -94,6 +109,24 @@
     <QtUic Include="DispLoadAxial.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="LimitsDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="UnderPeakDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="AdjustMoverDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="PresetPropDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="WaveFormSetupDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="SineWaveSetup.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="SWMainWindow.qrc">
@@ -102,6 +135,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ReceiveDataManage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LimitsDlgView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnderPeakDlgView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AdjustMoverDlgView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PresetPropDlgView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveFormSetupDlgView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

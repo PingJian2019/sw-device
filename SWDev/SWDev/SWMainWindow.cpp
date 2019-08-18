@@ -24,8 +24,11 @@ void SWMainWindow::InitCommunication()
 {
 	//init serial port
 	SWCommunication * pInstance = SWCommunication::GetInstance();
-	pInstance->InitializeCommunication("COM1", "9600");
+	pInstance->InitializeCommunication("COM3", "9600");
 	pInstance->SetIReceiveData(&m_receiveDataManage);
+
+	//init device
+	pInstance->StartCommunication();
 
 	pInstance->RDDMData(200);
 	pInstance->RDSDMData(200, 3);

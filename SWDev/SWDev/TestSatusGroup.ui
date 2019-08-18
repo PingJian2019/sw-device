@@ -13,18 +13,89 @@
   <property name="windowTitle">
    <string>Test status Group 1</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>23</height>
-    </rect>
-   </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTableWidget" name="tableWidget">
+      <column>
+       <property name="text">
+        <string>Mover(s)</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Control Channel</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Waveform</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Definition</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Conditional Statement</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Cycle Count</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Req. Cycle Count</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Total Cycle Count</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Compensation</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>TD</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>PV</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>LC</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

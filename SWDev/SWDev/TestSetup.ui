@@ -232,7 +232,7 @@ font: 10pt &quot;Arial&quot;;</string>
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton">
+              <widget class="QPushButton" name="m_limitsBtn">
                <property name="minimumSize">
                 <size>
                  <width>110</width>
@@ -310,7 +310,7 @@ font: 10pt &quot;Arial&quot;;</string>
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_2">
+              <widget class="QPushButton" name="m_underPeakBtn">
                <property name="minimumSize">
                 <size>
                  <width>110</width>
@@ -509,7 +509,7 @@ font: 10pt &quot;Arial&quot;;</string>
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_3">
+              <widget class="QPushButton" name="m_adjustMoverBtn">
                <property name="minimumSize">
                 <size>
                  <width>110</width>
@@ -574,7 +574,7 @@ font: 10pt &quot;Arial&quot;;</string>
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_4">
+              <widget class="QPushButton" name="m_presetOneBtn">
                <property name="minimumSize">
                 <size>
                  <width>110</width>
@@ -639,7 +639,7 @@ font: 10pt &quot;Arial&quot;;</string>
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_5">
+              <widget class="QPushButton" name="m_presetTwoBtn">
                <property name="minimumSize">
                 <size>
                  <width>110</width>
@@ -838,7 +838,7 @@ font: 10pt &quot;Arial&quot;;</string>
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_6">
+              <widget class="QPushButton" name="m_waveFormSetupBtn">
                <property name="minimumSize">
                 <size>
                  <width>110</width>

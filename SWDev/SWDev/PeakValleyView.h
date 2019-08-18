@@ -9,7 +9,8 @@ public:
 	PeakValleyView(QWidget * parent = NULL);
 
 private:
-	void InitTableWidget();
+	void InitTable();
+	void InitTableData();
 
 private:
 	Ui::PeakValleyForm ui;
