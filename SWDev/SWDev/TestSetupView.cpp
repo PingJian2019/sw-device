@@ -14,8 +14,8 @@ TestSetupView::TestSetupView(QWidget * parent /* = NULL */)
 {
 	ui.setupUi(this);
 
-	move(3, 50);
-	setFixedSize(1100, 180);
+	move(3, 48);
+	setFixedSize(1040, 155);
 	
 	setWindowFlags((this->windowFlags()) & (~Qt::WindowCloseButtonHint) &
 		(~Qt::WindowMaximizeButtonHint) & (~Qt::WindowMinimizeButtonHint));
@@ -31,8 +31,14 @@ void TestSetupView::CreateConnection()
 {
 	connect(ui.actionPeak_Valley, SIGNAL(triggered()), this, SLOT(OnPeakValleyAction()));
 	connect(ui.actionDispLoad, SIGNAL(triggered()), this, SLOT(OnDispLoadAction()));
+	connect(ui.actionWaveForm, SIGNAL(triggered()), this, SLOT(OnWaveFormAction()));
+	connect(ui.actionLimits, SIGNAL(triggered()), this, SLOT(OnLimitsAction()));
+	connect(ui.actionStandardData, SIGNAL(triggered()), this, SLOT(OnStandardDataAction()));
+	connect(ui.actionPeekValleyData, SIGNAL(triggered()), this, SLOT(OnPeakValleyDataAction()));
+
+
+
 	connect(ui.m_limitsBtn, SIGNAL(clicked()), this, SLOT(OnLimitsBtnClicked()));
-	connect(ui.m_underPeakBtn, SIGNAL(clicked()), this, SLOT(OnUndePeakBtnClicked()));
 	connect(ui.m_adjustMoverBtn, SIGNAL(clicked()), this, SLOT(OnAdjustMoverBtnClicked()));
 
 	connect(ui.m_presetOneBtn, SIGNAL(clicked()), this, SLOT(OnPresetOneBtnClicked()));
@@ -50,7 +56,7 @@ void TestSetupView::InitView()
 
 void TestSetupView::InitMoverTable()
 {
-	ui.m_moverTable->horizontalHeader()->setStretchLastSection(true);
+	/*ui.m_moverTable->horizontalHeader()->setStretchLastSection(true);
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -60,12 +66,12 @@ void TestSetupView::InitMoverTable()
 	ui.m_moverTable->setRowCount(1);
 	ui.m_moverTable->verticalHeader()->setHidden(true);
 	ui.m_moverTable->setSelectionMode(QAbstractItemView::NoSelection);
-	ui.m_moverTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.m_moverTable->setEditTriggers(QAbstractItemView::NoEditTriggers);*/
 }
 
 void TestSetupView::InitMoverTableData()
 {
-	QColor color(0, 0, 255);
+	/*QColor color(0, 0, 255);
 	QTableWidgetItem * item = NULL;
 
 	item = new QTableWidgetItem("Axial");
@@ -82,7 +88,7 @@ void TestSetupView::InitMoverTableData()
 
 	item = new QTableWidgetItem("Running");
 	item->setTextColor(color);
-	ui.m_moverTable->setItem(0, 3, item);
+	ui.m_moverTable->setItem(0, 3, item);*/
 }
 
 void TestSetupView::OnPeakValleyAction()
@@ -100,6 +106,27 @@ void TestSetupView::OnDispLoadAction()
 		m_dispLoadAxialView.show();
 	}
 }
+
+void TestSetupView::OnWaveFormAction()
+{
+	m_waveFormView.show();
+}
+
+void TestSetupView::OnLimitsAction()
+{
+	m_limitsDlgView.exec();
+}
+
+void TestSetupView::OnStandardDataAction()
+{
+
+}
+
+void TestSetupView::OnPeakValleyDataAction()
+{
+
+}
+
 
 void TestSetupView::OnLimitsBtnClicked()
 {

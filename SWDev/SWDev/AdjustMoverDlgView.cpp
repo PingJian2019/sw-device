@@ -6,7 +6,7 @@ AdjustMoverDlgView::AdjustMoverDlgView(QWidget * parent /* = nullptr */)
 	ui.setupUi(this);
 
 	move(300, 80);
-	setFixedSize(380, 330);
+	setFixedSize(400, 250);
 	setWindowFlags((this->windowFlags()) & ~Qt::WindowContextHelpButtonHint);
 }
 

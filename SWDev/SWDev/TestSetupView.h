@@ -30,6 +30,10 @@ private:
 private slots:
 	void OnPeakValleyAction();
 	void OnDispLoadAction();
+	void OnWaveFormAction();
+	void OnLimitsAction();
+	void OnStandardDataAction();
+	void OnPeakValleyDataAction();
 
 	void OnLimitsBtnClicked();
 	void OnUndePeakBtnClicked();

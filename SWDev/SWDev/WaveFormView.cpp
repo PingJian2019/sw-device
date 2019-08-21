@@ -11,10 +11,11 @@ WaveFormView::WaveFormView(QWidget * parent /* = NULL */)
 {
 	ui.setupUi(this);
 
-	move(3, 290);
-	setFixedSize(1100, 400);
+	move(3, 325);
+	setFixedSize(1040, 370);
 
-	setWindowFlags((this->windowFlags()) & (~Qt::WindowCloseButtonHint));
+	setWindowFlags((this->windowFlags()) & 
+	 (~Qt::WindowMaximizeButtonHint) & (~Qt::WindowMinimizeButtonHint));
 	//setWindowFlags((this->windowFlags()) &
 		//(~Qt::WindowMaximizeButtonHint) & (~Qt::WindowMinimizeButtonHint));
 
@@ -52,7 +53,7 @@ void WaveFormView::OnTimerUpdate()
 void WaveFormView::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);
-	painter.drawImage(60, 40, image);
+	painter.drawImage(30, 20, image);
 }
 
 void WaveFormView::Paint()
