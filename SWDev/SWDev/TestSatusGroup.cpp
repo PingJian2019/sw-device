@@ -1,4 +1,5 @@
 #include "TestSatusGroup.h"
+#include "common_type.h"
 
 #define COLUMNCHANNEL 0
 #define COLUMNWAVEFORM 1
@@ -47,7 +48,7 @@ void TestSatusGroupView::InitTable()
 void TestSatusGroupView::InitTableData()
 {
 	QTableWidgetItem * item = NULL;
-	ui.tableWidget->setItem(0, COLUMNCHANNEL, new QTableWidgetItem("Load"));
+	ui.tableWidget->setItem(0, COLUMNCHANNEL, new QTableWidgetItem("D Model"));
 	item = ui.tableWidget->item(0, COLUMNCHANNEL);
 	item->setTextColor(QColor(0, 0, 255));
 	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -85,5 +86,27 @@ void TestSatusGroupView::InitTableData()
 	item = ui.tableWidget->item(0, COLUMNPV);
 	item->setTextColor(QColor(0, 0, 255));
 	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+}
 
+void TestSatusGroupView::OnModelChanged(int index)
+{
+	QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNCHANNEL);
+	if (index == MODE_DISP)
+	{
+		if (item)
+		{
+			item->setText("D Model");
+		}
+	}
+	else if (index == MODE_LOAD)
+	{
+		if (item)
+		{
+			item->setText("L Model");
+		}
+	}
+	else
+	{
+
+	}
 }

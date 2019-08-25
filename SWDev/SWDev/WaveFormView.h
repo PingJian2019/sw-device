@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QTimer>
 
-#define BUFFERSIZE		30
+#define BUFFERSIZE		100
 
 class WaveFormView : public QMainWindow
 {
@@ -24,6 +24,10 @@ private:
 	void Paint();
 	void CreatData();
 
+
+	void DrawCoorDinateSys();
+	void DrawXYScale();
+
 private:
 	Ui::WaveForm ui;
 
@@ -33,11 +37,23 @@ private:
 	int				maxpos;
 	int				avevalue;
 
+	int				m_originX;
+	int				m_originY;
+	int				m_width;
+	int				m_height;
+
 	int				index;
+	int				m_lastDrawIndex;
+
+	float           m_xScale;
+	float			m_yScale;
 
 	int				buffer[BUFFERSIZE];
+	int				buffer2[BUFFERSIZE];
 
 	QImage			image;
 	QTimer			timer;
+
+	QPainter*       painter;
 
 };

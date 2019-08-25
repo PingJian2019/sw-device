@@ -13,6 +13,9 @@
 #include "AdjustMoverDlgView.h"
 #include "PresetPropDlgView.h"
 #include "WaveFormSetupDlgView.h"
+#include "WaveFormCompensationDlgView.h"
+#include "StandardDataSetupDlgView.h"
+#include "PeakValleyDataSetupDlgView.h"
 
 class TestSetupView : public QMainWindow
 {
@@ -20,12 +23,17 @@ class TestSetupView : public QMainWindow
 public:
 	TestSetupView(QWidget * parent = NULL);
 
+protected:
+	bool eventFilter(QObject *watched, QEvent *event);
+
 private:
 	void CreateConnection();
 
 	void InitView();
 	void InitMoverTable();
 	void InitMoverTableData();
+
+	void InitInstallEvent();
 
 private slots:
 	void OnPeakValleyAction();
@@ -40,11 +48,19 @@ private slots:
 	void OnAdjustMoverBtnClicked();
 	void OnPresetOneBtnClicked();
 	void OnPresetTwoBtnClicked();
+	
 	void OnWaveFormSetupBtnClicked();
+	void OnWaveFormCompenBtnClicked();
+
+	void OnStandardDataSetupBtnClicked();
+	void OnPeakValleyDataSetupBtnClicked();
+
+
+	void OnStartStopBtnClicked();
+	void OnServerBtnClicked();
 
 private:
 	Ui::TestSetupForm ui;
-
 
 	TestSatusGroupView m_testGroupView;
 	WaveFormView m_waveFormView;
@@ -56,5 +72,8 @@ private:
 	AdjustMoverDlgView m_adjustMoverDlgView;
 	PresetPropDlgView m_presetPropDlgView;
 	WaveFormSetupDlgView m_waveFormSetupDlgView;
+	WaveFormCompensationDlgView m_waveFormCompenDlgView;
+	StandardDataSetupDlgView m_standardDataSetupDlgView;
+	PeakValleyDataSetupDlgView m_peakValleyDataSetupDlgView;
 
 };

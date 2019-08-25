@@ -1,13 +1,41 @@
 #include "WaveFormView.h"
 #include <time.h>
 
+#define IMAGEWIDTH 1000
+#define IMAGEHEIGHT 350
+
+#define IMAGELEFTPOS 30
+#define IMAGETOPPOS 20
+
+#define IMAGELEFMARGIN 60
+#define IMAGERIGHTMARGIN 20
+#define IMAGETOPMARGIN 50
+#define IMGAGEBUTTOMMARGIN 50
+
+#define DRAWAREAWIDH IMAGEWIDTH - IMAGELEFMARGIN - IMAGERIGHTMARGIN
+#define DRAWAREAHEIGHT IMAGEHEIGHT - IMAGETOPMARGIN - IMGAGEBUTTOMMARGIN
+
+#define COORDINATEORIGINX IMAGELEFMARGIN
+#define COORDINATEORIGINY IMAGEHEIGHT - IMGAGEBUTTOMMARGIN
+
+#define XCOUNT 5
+#define YCOUNT 5
+#define SCALELINELEN 4
+#define SCALEVALUELEN 20
+
+#define NUMPOINTTODRAW BUFFERSIZE
+
+
 WaveFormView::WaveFormView(QWidget * parent /* = NULL */)
 	: QMainWindow(parent)
 	, maxvalue(0)
 	, minvalue(1000)
 	, maxpos(0)
 	, minpos(0)
+	, m_xScale(0.0f)
+	, m_yScale(0.0f)
 	, index(0)
+	, m_lastDrawIndex(0)
 {
 	ui.setupUi(this);
 
@@ -24,13 +52,28 @@ WaveFormView::WaveFormView(QWidget * parent /* = NULL */)
 
 void WaveFormView::Init()
 {
-	image = QImage(1000, 350, QImage::Format_RGB32);  //画布的初始化大小设为600*500，使用32位颜色
+	image = QImage(IMAGEWIDTH, IMAGEHEIGHT, QImage::Format_RGB32);  //画布的初始化大小设为600*500，使用32位颜色
 	QColor backColor = qRgb(255, 255, 255);    //画布初始化背景色使用白色
 	image.fill(backColor);
 
 	memset(buffer, 0, 30);
 
 	CreatData();
+
+	m_width = DRAWAREAWIDH;
+	m_height = DRAWAREAHEIGHT;
+	m_originX = COORDINATEORIGINX;
+	m_originY = COORDINATEORIGINY;
+
+	m_xScale = (double)m_width / NUMPOINTTODRAW;
+	m_yScale = (double)m_height * 0.4 / (maxvalue - minvalue);
+
+	painter = new QPainter(&image);
+	painter->setRenderHint(QPainter::Antialiasing, true);
+	//painter->scale(double(DRAWAREAWIDH/NUMPOINTTODRAW), 1.0f);
+
+	DrawCoorDinateSys();
+	DrawXYScale();
 
 	connect(&timer, SIGNAL(timeout()), this, SLOT(OnTimerUpdate()));
 	timer.start(40);                  
@@ -39,13 +82,37 @@ void WaveFormView::Init()
 void WaveFormView::OnTimerUpdate()
 {
 	index++;
-	if (index == 30)
+	m_lastDrawIndex++;
+	if (index == BUFFERSIZE)
 	{
 		index = 0;
 		QColor backColor = qRgb(255, 255, 255);    //画布初始化背景色使用白色
 		image.fill(backColor);
+
+		DrawCoorDinateSys();
+		DrawXYScale();
 	}
-	Paint();
+
+	if (m_lastDrawIndex == BUFFERSIZE)
+	{
+		m_lastDrawIndex = 0;
+	}
+
+	//Paint();
+	painter->save();
+	QPen pen, penPoint;
+	pen.setColor(Qt::black);
+	pen.setWidth(1);
+	penPoint.setColor(Qt::blue);
+	penPoint.setWidth(3);
+
+	painter->setPen(pen);
+	painter->drawLine(m_originX + m_xScale * (index - 1), m_originY - buffer[m_lastDrawIndex - 1] * m_yScale,
+		m_originX + m_xScale * (index), m_originY - buffer[m_lastDrawIndex] * m_yScale);
+
+
+	painter->restore();
+
 
 	update();
 }
@@ -53,16 +120,74 @@ void WaveFormView::OnTimerUpdate()
 void WaveFormView::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);
-	painter.drawImage(30, 20, image);
+	painter.drawImage(IMAGELEFTPOS, IMAGETOPPOS, image);
+}
+
+void WaveFormView::DrawCoorDinateSys()
+{
+	painter->drawLine(m_originX, m_originY, m_originX + m_width, m_originY);
+	painter->drawLine(m_originX, m_originY, m_originX, m_originY - m_height);
+}
+
+void WaveFormView::DrawXYScale()
+{
+	//x coordinate
+	
+	//draw origin
+	painter->drawText(m_originX, m_originY + 20, QString::number(0));
+
+	QPen penDegree;
+	penDegree.setColor(Qt::black);
+	penDegree.setWidth(2);
+	painter->setPen(penDegree);
+
+	QPen penGrad;
+	penGrad.setColor(Qt::black);
+	penGrad.setWidth(1);
+	penGrad.setStyle(Qt::DotLine);
+
+	painter->save();
+	//draw x
+	for (int i = 0; i < XCOUNT; i++)
+	{
+		painter->setPen(penDegree);
+		painter->drawLine(m_originX + (i + 1) * m_width / XCOUNT, m_originY, m_originX + (i + 1) * m_width / XCOUNT, m_originY + SCALELINELEN);
+		painter->drawText(m_originX + (i + 0.97) * m_width / XCOUNT,
+			m_originY + SCALEVALUELEN, QString::number(i + 1));
+
+		painter->setPen(penGrad);
+		painter->drawLine(m_originX + (i + 1) * m_width / XCOUNT, m_originY - m_height, m_originX + (i + 1) * m_width / XCOUNT, m_originY);
+	}
+
+	//draw y
+	for (int i = 0; i < YCOUNT; i++)
+	{
+		painter->setPen(penDegree);
+		painter->drawLine(m_originX, m_originY - (i + 1) * m_height / YCOUNT,
+			m_originX - SCALELINELEN, m_originY - (i + 1) * m_height / YCOUNT);
+		painter->drawText(m_originX - SCALEVALUELEN, m_originY - (i + 0.85) * m_height / YCOUNT,
+			QString::number(i + 1));
+
+		painter->setPen(penGrad);
+		painter->drawLine(m_originX, m_originY - (i + 1) * m_height / YCOUNT,
+			m_originX + m_width, m_originY - (i + 1) * m_height / YCOUNT);
+	}
+	painter->restore();
 }
 
 void WaveFormView::Paint()
 {
+	//DrawCoorDinateSys();
+	//DrawXYScale();
+#if 0
 	QPainter painter(&image);
-	painter.setRenderHint(QPainter::Antialiasing, true);//设置反锯齿模式，好看一点
-	int pointx = 40, pointy = 320;//确定坐标轴起点坐标，这里定义(35,280)
-	int width = 960 - pointx, height = 280;//确定坐标轴宽度跟高度 上文定义画布为600X300，宽高依此而定。
+	painter.setRenderHint(QPainter::Antialiasing, true);
+	int pointx = COORDINATEORIGINX, pointy = COORDINATEORIGINY;
+	//int width = 960 - pointx, height = 280;//确定坐标轴宽度跟高度 上文定义画布为600X300，宽高依此而定。
 										   //绘制坐标轴 坐标轴原点(35，280)
+
+	int width = DRAWAREAWIDH;
+	int height = DRAWAREAHEIGHT;
 	//painter.drawRect(5, 5, 600 - 10, 300 - 10);//外围的矩形，从(5,5)起，到(590,290)结束，周围留了5的间隙。
 	painter.drawLine(pointx, pointy, width + pointx, pointy);//坐标轴x宽度为width
 	painter.drawLine(pointx, pointy - height, pointx, pointy);//坐标轴y高度为height
@@ -76,17 +201,17 @@ void WaveFormView::Paint()
 
 	QPen pen, penPoint;
 	pen.setColor(Qt::black);
-	pen.setWidth(2);
+	pen.setWidth(1);
 	penPoint.setColor(Qt::blue);
-	penPoint.setWidth(5);
+	penPoint.setWidth(3);
 
 	for (int i = 0; i < index; i++)
 	{
 		//由于y轴是倒着的，所以y轴坐标要pointy-a[i]*ky 其中ky为比例系数
 		painter.setPen(pen);//黑色笔用于连线
 		painter.drawLine(pointx + xscale*i, pointy - buffer[i] * yscale, pointx + xscale*(i + 1), pointy - buffer[i + 1] * yscale);
-		painter.setPen(penPoint);//蓝色的笔，用于标记各个点
-		painter.drawPoint(pointx + xscale*i, pointy - buffer[i] * yscale);
+		//painter.setPen(penPoint);//蓝色的笔，用于标记各个点
+		//painter.drawPoint(pointx + xscale*i, pointy - buffer[i] * yscale);
 	}
 
 	//painter.drawPoint(pointx + xscale*(30 - 1), pointy - buffer[30 - 1] * yscale);//绘制最后一个点
@@ -133,13 +258,15 @@ void WaveFormView::Paint()
 		painter.drawLine(pointx, pointy - (i + 1)*height / 10,
 			pointx + width, pointy - (i + 1)*height / 10);
 	}
+
+#endif
 }
 
 void WaveFormView::CreatData()
 {
 	srand(time(NULL));
-	//获得数据中最大值和最小值、平均数
-	int n = 30;//n为数据个数
+
+	int n = BUFFERSIZE;
 	double sum = 0;
 	double ave = 0;
 	for (int i = 0; i < n; i++)
@@ -157,5 +284,5 @@ void WaveFormView::CreatData()
 			minpos = i;
 		}
 	}
-	avevalue = sum / n;//平均数
+	avevalue = sum / n;
 }

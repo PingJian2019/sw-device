@@ -69,6 +69,18 @@
     <ClCompile Include="WaveFormSetupDlgView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SineWaveSetupView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveFormCompensationDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardDataSetupDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PeakValleyDataSetupDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="SWMainWindow.h">
@@ -87,6 +99,24 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="DispLoadAxialView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PresetPropDlgView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SineWaveSetupView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WaveFormCompensationDlgView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="StandardDataSetupDlgView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PeakValleyDataSetupDlgView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WaveFormSetupDlgView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -127,6 +157,15 @@
     <QtUic Include="SineWaveSetup.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="WaveFormCompensation.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="StandardDataSetupDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="PeakValleyDataSetupDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="SWMainWindow.qrc">
@@ -144,12 +183,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AdjustMoverDlgView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PresetPropDlgView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WaveFormSetupDlgView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,12 @@ enum MessageType
 	MESS_CLEAR_ERROR_T,
 };
 
+enum RunMode
+{
+	MODE_DISP = 0,
+	MODE_LOAD,
+};
+
 struct DownlinkMessage
 {
 	MessageType m_messType;

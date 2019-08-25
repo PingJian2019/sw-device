@@ -1,5 +1,7 @@
 #include "TestSetupView.h"
 
+#include <QMouseEvent>
+
 TestSetupView::TestSetupView(QWidget * parent /* = NULL */)
 	: QMainWindow(parent)
 	, m_testGroupView(this)
@@ -11,6 +13,8 @@ TestSetupView::TestSetupView(QWidget * parent /* = NULL */)
 	, m_adjustMoverDlgView(this)
 	, m_presetPropDlgView(this)
 	, m_waveFormSetupDlgView(this)
+	, m_waveFormCompenDlgView(this)
+	, m_standardDataSetupDlgView(this)
 {
 	ui.setupUi(this);
 
@@ -25,6 +29,8 @@ TestSetupView::TestSetupView(QWidget * parent /* = NULL */)
 	InitMoverTable();
 	InitMoverTableData();
 	CreateConnection();
+
+	InitInstallEvent();
 }
 
 void TestSetupView::CreateConnection()
@@ -44,6 +50,17 @@ void TestSetupView::CreateConnection()
 	connect(ui.m_presetOneBtn, SIGNAL(clicked()), this, SLOT(OnPresetOneBtnClicked()));
 	connect(ui.m_presetTwoBtn, SIGNAL(clicked()), this, SLOT(OnPresetTwoBtnClicked()));
 	connect(ui.m_waveFormSetupBtn, SIGNAL(clicked()), this, SLOT(OnWaveFormSetupBtnClicked()));
+
+	connect(ui.m_startBtn, SIGNAL(clicked()), this, SLOT(OnStartStopBtnClicked()));
+	connect(ui.m_serverBtn, SIGNAL(clicked()), this, SLOT(OnServerBtnClicked()));
+
+	connect(ui.m_waveFormCompemBtn, SIGNAL(clicked()), this, SLOT(OnWaveFormCompenBtnClicked()));
+	connect(ui.m_standardDataSetupBtn, SIGNAL(clicked()), this, SLOT(OnStandardDataSetupBtnClicked()));
+	connect(ui.m_peakValleyDataSetupBtn, SIGNAL(clicked()), this, SLOT(OnPeakValleyDataSetupBtnClicked()));
+
+
+	connect(&m_waveFormSetupDlgView, SIGNAL(SigModelChanged(int)), &m_testGroupView, SLOT(OnModelChanged(int)));
+	
 }
 
 void TestSetupView::InitView()
@@ -52,6 +69,29 @@ void TestSetupView::InitView()
 	m_waveFormView.show();
 	m_peakValleyView.show();
 	m_dispLoadAxialView.show();
+}
+
+void TestSetupView::InitInstallEvent()
+{
+	ui.m_presetOneBtn->installEventFilter(this);
+	ui.m_presetTwoBtn->installEventFilter(this);
+}
+
+bool TestSetupView::eventFilter(QObject *watched, QEvent *event)
+{
+	if (watched == ui.m_presetOneBtn || watched == ui.m_presetTwoBtn)
+	{
+		if (event->type() == QEvent::MouseButtonPress)
+		{
+			QMouseEvent * mEvent = (QMouseEvent *)event;
+			if (mEvent->button() == Qt::RightButton)
+			{
+				m_presetPropDlgView.exec();
+				return true;
+			}
+		}
+	}
+	return QMainWindow::eventFilter(watched, event);
 }
 
 void TestSetupView::InitMoverTable()
@@ -145,15 +185,61 @@ void TestSetupView::OnAdjustMoverBtnClicked()
 
 void TestSetupView::OnPresetOneBtnClicked()
 {
-	m_presetPropDlgView.exec();
+	//m_presetPropDlgView.exec();
 }
 
 void TestSetupView::OnPresetTwoBtnClicked()
 {
-	m_presetPropDlgView.exec();
+	//m_presetPropDlgView.exec();
 }
 
 void TestSetupView::OnWaveFormSetupBtnClicked()
 {
 	m_waveFormSetupDlgView.exec();
+}
+
+void TestSetupView::OnStartStopBtnClicked()
+{
+	QString strText = ui.m_startBtn->text();
+	if (strText == "Start")
+	{
+		ui.m_startBtn->setText("Stop");
+	}
+	else if (strText == "Stop")
+	{
+		ui.m_startBtn->setText("Start");
+	}
+	else
+	{ }
+}
+
+void TestSetupView::OnServerBtnClicked()
+{
+	QString strText = ui.m_serverBtn->text();
+	if (strText == "Server On")
+	{
+		ui.m_serverBtn->setText("Server Off");
+	}
+	else if (strText == "Server Off")
+	{
+		ui.m_serverBtn->setText("Server On");
+	}
+	else
+	{
+	}
+}
+
+void TestSetupView::OnWaveFormCompenBtnClicked()
+{
+	m_waveFormCompenDlgView.exec();
+}
+
+void TestSetupView::OnStandardDataSetupBtnClicked()
+{
+	m_standardDataSetupDlgView.exec();
+}
+
+void TestSetupView::OnPeakValleyDataSetupBtnClicked()
+{
+	m_peakValleyDataSetupDlgView.exec();
 }

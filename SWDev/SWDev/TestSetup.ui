@@ -767,7 +767,7 @@ font: 10pt &quot;Arial&quot;;</string>
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="m_waveFormSetupBtn_2">
+          <widget class="QPushButton" name="m_waveFormCompemBtn">
            <property name="minimumSize">
             <size>
              <width>135</width>
@@ -972,7 +972,7 @@ font: 10pt &quot;Arial&quot;;</string>
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_9">
+          <widget class="QPushButton" name="m_standardDataSetupBtn">
            <property name="minimumSize">
             <size>
              <width>135</width>
@@ -1037,7 +1037,7 @@ font: 10pt &quot;Arial&quot;;</string>
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_10">
+          <widget class="QPushButton" name="m_peakValleyDataSetupBtn">
            <property name="minimumSize">
             <size>
              <width>135</width>
@@ -1205,19 +1205,6 @@ font: 10pt &quot;Arial&quot;;</string>
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer_10">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>8</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_22">
          <item>
           <spacer name="horizontalSpacer_39">
@@ -1233,53 +1220,21 @@ font: 10pt &quot;Arial&quot;;</string>
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_15">
+          <widget class="QPushButton" name="m_startBtn">
            <property name="minimumSize">
             <size>
-             <width>70</width>
+             <width>135</width>
              <height>20</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>70</width>
+             <width>135</width>
              <height>20</height>
             </size>
            </property>
            <property name="text">
             <string>Start</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Stop</string>
            </property>
           </widget>
          </item>
@@ -1327,53 +1282,21 @@ font: 10pt &quot;Arial&quot;;</string>
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_16">
+          <widget class="QPushButton" name="m_serverBtn">
            <property name="minimumSize">
             <size>
-             <width>70</width>
+             <width>135</width>
              <height>20</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>65</width>
+             <width>135</width>
              <height>20</height>
             </size>
            </property>
            <property name="text">
             <string>Server On</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_2">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Server Off</string>
            </property>
           </widget>
          </item>

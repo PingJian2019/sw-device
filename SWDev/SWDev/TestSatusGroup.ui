@@ -37,7 +37,7 @@
       </property>
       <column>
        <property name="text">
-        <string>Control Channel</string>
+        <string>Control Model</string>
        </property>
       </column>
       <column>

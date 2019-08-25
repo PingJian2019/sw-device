@@ -7,10 +7,12 @@ class TestSatusGroupView : public QMainWindow
 public:
 	TestSatusGroupView(QWidget * parent = NULL);
 
-
 private:
 	void InitTable();
 	void InitTableData();
+
+private slots:
+	void OnModelChanged(int index);
 
 private:
 	Ui::TestStatusGroupForm ui;

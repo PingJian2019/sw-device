@@ -117,13 +117,17 @@
     <ClCompile Include="DispLoadAxialView.cpp" />
     <ClCompile Include="LimitsDlgView.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PeakValleyDataSetupDlgView.cpp" />
     <ClCompile Include="PeakValleyView.cpp" />
     <ClCompile Include="PresetPropDlgView.cpp" />
     <ClCompile Include="ReceiveDataManage.cpp" />
+    <ClCompile Include="SineWaveSetupView.cpp" />
+    <ClCompile Include="StandardDataSetupDlgView.cpp" />
     <ClCompile Include="SWMainWindow.cpp" />
     <ClCompile Include="TestSatusGroup.cpp" />
     <ClCompile Include="TestSetupView.cpp" />
     <ClCompile Include="UnderPeakDlgView.cpp" />
+    <ClCompile Include="WaveFormCompensationDlgView.cpp" />
     <ClCompile Include="WaveFormSetupDlgView.cpp" />
     <ClCompile Include="WaveFormView.cpp" />
   </ItemGroup>
@@ -135,13 +139,16 @@
     <QtUic Include="DispLoadAxial.ui" />
     <QtUic Include="LimitsDlg.ui" />
     <QtUic Include="PeakValley.ui" />
+    <QtUic Include="PeakValleyDataSetupDlg.ui" />
     <QtUic Include="PresetPropDlg.ui" />
     <QtUic Include="SineWaveSetup.ui" />
+    <QtUic Include="StandardDataSetupDlg.ui" />
     <QtUic Include="SWMainWindow.ui" />
     <QtUic Include="TestSatusGroup.ui" />
     <QtUic Include="TestSetup.ui" />
     <QtUic Include="UnderPeakDlg.ui" />
     <QtUic Include="WaveForm.ui" />
+    <QtUic Include="WaveFormCompensation.ui" />
     <QtUic Include="WaveFormSetupDlg.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -167,9 +174,31 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdjustMoverDlgView.h" />
-    <ClInclude Include="PresetPropDlgView.h" />
+    <QtMoc Include="PresetPropDlgView.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="SineWaveSetupView.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="StandardDataSetupDlgView.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="PeakValleyDataSetupDlgView.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
     <ClInclude Include="UnderPeakDlgView.h" />
-    <ClInclude Include="WaveFormSetupDlgView.h" />
+    <QtMoc Include="WaveFormCompensationDlgView.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="WaveFormSetupDlgView.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
     <QtMoc Include="PeakValleyView.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
