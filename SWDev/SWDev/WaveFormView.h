@@ -27,6 +27,7 @@ private:
 
 	void DrawCoorDinateSys();
 	void DrawXYScale();
+	void DrawGrad();
 
 private:
 	Ui::WaveForm ui;
@@ -36,6 +37,12 @@ private:
 	int				minpos;
 	int				maxpos;
 	int				avevalue;
+
+	int				minvalue2;
+	int				maxvalue2;
+	int				minpos2;
+	int				maxpos2;
+	int				avevalue2;
 
 	int				m_originX;
 	int				m_originY;

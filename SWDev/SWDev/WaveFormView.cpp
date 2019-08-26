@@ -36,6 +36,8 @@ WaveFormView::WaveFormView(QWidget * parent /* = NULL */)
 	, m_yScale(0.0f)
 	, index(0)
 	, m_lastDrawIndex(0)
+	, maxvalue2(0)
+	, minvalue2(1000)
 {
 	ui.setupUi(this);
 
@@ -74,6 +76,7 @@ void WaveFormView::Init()
 
 	DrawCoorDinateSys();
 	DrawXYScale();
+	DrawGrad();
 
 	connect(&timer, SIGNAL(timeout()), this, SLOT(OnTimerUpdate()));
 	timer.start(40);                  
@@ -91,6 +94,7 @@ void WaveFormView::OnTimerUpdate()
 
 		DrawCoorDinateSys();
 		DrawXYScale();
+		DrawGrad();
 	}
 
 	if (m_lastDrawIndex == BUFFERSIZE)
@@ -99,20 +103,26 @@ void WaveFormView::OnTimerUpdate()
 	}
 
 	//Paint();
-	painter->save();
-	QPen pen, penPoint;
-	pen.setColor(Qt::black);
-	pen.setWidth(1);
-	penPoint.setColor(Qt::blue);
-	penPoint.setWidth(3);
+	if (index >= 1 && m_lastDrawIndex >= 1)
+	{
+		painter->save();
+		QPen pen, penPoint;
+		pen.setColor(Qt::blue);
+		pen.setWidth(1);
+		penPoint.setColor(Qt::green);
+		penPoint.setWidth(1);
 
-	painter->setPen(pen);
-	painter->drawLine(m_originX + m_xScale * (index - 1), m_originY - buffer[m_lastDrawIndex - 1] * m_yScale,
-		m_originX + m_xScale * (index), m_originY - buffer[m_lastDrawIndex] * m_yScale);
+		painter->setPen(pen);
+		painter->drawLine(m_originX + m_xScale * (index - 1), m_originY - buffer[m_lastDrawIndex - 1] * m_yScale,
+			m_originX + m_xScale * (index), m_originY - buffer[m_lastDrawIndex] * m_yScale);
+
+		painter->setPen(penPoint);
+		painter->drawLine(m_originX + m_xScale * (index - 1), m_originY - buffer2[m_lastDrawIndex - 1] * m_yScale,
+			m_originX + m_xScale * (index), m_originY - buffer2[m_lastDrawIndex] * m_yScale);
 
 
-	painter->restore();
-
+		painter->restore();
+	}
 
 	update();
 }
@@ -125,16 +135,56 @@ void WaveFormView::paintEvent(QPaintEvent *event)
 
 void WaveFormView::DrawCoorDinateSys()
 {
+	painter->save();
+
+	QPen penDegree;
+	penDegree.setColor(Qt::black);
+	penDegree.setWidth(2);
+	painter->setPen(penDegree);
+	
 	painter->drawLine(m_originX, m_originY, m_originX + m_width, m_originY);
 	painter->drawLine(m_originX, m_originY, m_originX, m_originY - m_height);
+
+	painter->restore();
 }
 
 void WaveFormView::DrawXYScale()
 {
-	//x coordinate
-	
+	painter->save();
+
+	QPen penDegree;
+	penDegree.setColor(Qt::black);
+	penDegree.setWidth(2);
+	painter->setPen(penDegree);
+
 	//draw origin
 	painter->drawText(m_originX, m_originY + 20, QString::number(0));
+
+
+	//draw x scale
+	for (int i = 0; i < XCOUNT; i++)
+	{
+		painter->drawText(m_originX + (i + 0.97) * m_width / XCOUNT,
+			m_originY + SCALEVALUELEN, QString::number(i + 1));
+	}
+
+	//draw y scale
+	for (int i = 0; i < YCOUNT; i++)
+	{
+		painter->drawText(m_originX - SCALEVALUELEN, m_originY - (i + 0.85) * m_height / YCOUNT,
+			QString::number(i + 1));
+	}
+
+	painter->restore();
+}
+
+void WaveFormView::DrawGrad()
+{
+	//x coordinate
+
+	//draw origin
+	//painter->drawText(m_originX, m_originY + 20, QString::number(0));
+	painter->save();
 
 	QPen penDegree;
 	penDegree.setColor(Qt::black);
@@ -146,14 +196,14 @@ void WaveFormView::DrawXYScale()
 	penGrad.setWidth(1);
 	penGrad.setStyle(Qt::DotLine);
 
-	painter->save();
+	
 	//draw x
 	for (int i = 0; i < XCOUNT; i++)
 	{
 		painter->setPen(penDegree);
 		painter->drawLine(m_originX + (i + 1) * m_width / XCOUNT, m_originY, m_originX + (i + 1) * m_width / XCOUNT, m_originY + SCALELINELEN);
-		painter->drawText(m_originX + (i + 0.97) * m_width / XCOUNT,
-			m_originY + SCALEVALUELEN, QString::number(i + 1));
+		//painter->drawText(m_originX + (i + 0.97) * m_width / XCOUNT,
+			//m_originY + SCALEVALUELEN, QString::number(i + 1));
 
 		painter->setPen(penGrad);
 		painter->drawLine(m_originX + (i + 1) * m_width / XCOUNT, m_originY - m_height, m_originX + (i + 1) * m_width / XCOUNT, m_originY);
@@ -165,8 +215,8 @@ void WaveFormView::DrawXYScale()
 		painter->setPen(penDegree);
 		painter->drawLine(m_originX, m_originY - (i + 1) * m_height / YCOUNT,
 			m_originX - SCALELINELEN, m_originY - (i + 1) * m_height / YCOUNT);
-		painter->drawText(m_originX - SCALEVALUELEN, m_originY - (i + 0.85) * m_height / YCOUNT,
-			QString::number(i + 1));
+		//painter->drawText(m_originX - SCALEVALUELEN, m_originY - (i + 0.85) * m_height / YCOUNT,
+			//QString::number(i + 1));
 
 		painter->setPen(penGrad);
 		painter->drawLine(m_originX, m_originY - (i + 1) * m_height / YCOUNT,
@@ -268,21 +318,31 @@ void WaveFormView::CreatData()
 
 	int n = BUFFERSIZE;
 	double sum = 0;
+	double sum2 = 0;
 	double ave = 0;
 	for (int i = 0; i < n; i++)
+	{
 		buffer[i] = rand() % 40 + 20;
+		buffer2[i] = rand() % 40 + 40;
+	}
+
 	int maxpos = 0, minpos = 0;
+	int maxpos2 = 0, minpos2 = 0;
 	for (int i = 0; i < n; i++)
 	{
 		sum += buffer[i];
+		sum2 += buffer2[i];
 		if (buffer[i] > maxvalue) {
 			maxvalue = buffer[i];
 			maxpos = i;
+			maxvalue2 = buffer2[i];
 		}
 		if (buffer[i] < minvalue) {
 			minvalue = buffer[i];
 			minpos = i;
+			minvalue2 = buffer2[i];
 		}
 	}
 	avevalue = sum / n;
+	avevalue2 = sum / n;
 }
