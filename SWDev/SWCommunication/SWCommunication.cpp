@@ -128,9 +128,14 @@ void SWCommunication::StartCommunication()
 {
 	DownlinkMessage message;
 	message.m_messType = MESS_START_COM_T;
-	message.m_downlinkDataLen = 3;
-	unsigned char command[3] = { 0x43,0x52,0x0D };
-	memcpy(message.m_downlinkData, command, 3);
+
+	char * cmd = "CR\r";
+	int cmdLen = strlen(cmd);
+
+	//unsigned char command[3] = { 0x43,0x52,0x0D };
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
 	SendDownlinnkMessage(message);
 }
 
@@ -138,11 +143,254 @@ void SWCommunication::StopCommnuication()
 {
 	DownlinkMessage message;
 	message.m_messType = MESS_STOP_COM_T;
-	message.m_downlinkDataLen = 3;
-	unsigned char command[3] = { 0x43,0x51,0x0D };
-	memcpy(message.m_downlinkData, command, 3);
-	SendDownlinnkMessage(message);
 
+	char * cmd = "CQ\r";
+	int cmdLen = strlen(cmd);
+
+	//unsigned char command[3] = { 0x43,0x51,0x0D };
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadDM0to10()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_DM_0TO10;
+	message.m_priority = PRIORITY_THREE;
+
+
+	char * cmd = "RDS DM0.U 6\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadMR500to503()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_MR_500T0503;
+	message.m_priority = PRIORITY_THREE;
+
+
+	char * cmd = "RDS MR500 4\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadAlarmInfo()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_ALARM_INFO;
+	message.m_priority = PRIORITY_THREE;
+
+	char * cmd = "RDS MR600 5\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WritePIDRun()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_PID_RUN;
+
+	char * cmd = "WR MR0 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteLoadClear0()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_LOAD_CLEAR;
+
+	char * cmd = "WR MR3 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteDispClear0()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_DISP_CLEAR;
+
+	char * cmd = "WR MR200 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog1Start()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG1_START;
+
+	char * cmd = "WR MR201 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog1Stop()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG1_STOP;
+
+	char * cmd = "WR MR201 0\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog2Start()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG2_START;
+
+	char * cmd = "WR MR202 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog2Stop()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG2_STOP;
+
+	char * cmd = "WR MR202 0\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog3Start()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG3_START;
+
+	char * cmd = "WR MR203 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog3Stop()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG3_STOP;
+
+	char * cmd = "WR MR203 0\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WritePreLoadLoad()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_PRELOAD_LOAD;
+
+	char * cmd = "WR MR207 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WritePreDispLoad()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_PREDISP_LOAD;
+
+	char * cmd = "WR MR208 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteSwitchModel()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_SWITCH_MODEL;
+
+	char * cmd = "WR MR300 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteTestStartStop()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_TEST_START_STOP;
+
+	char * cmd = "WR MR301 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteClearError()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_TEST_START_STOP;
+
+	char * cmd = "WR MR302 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteServiceOn()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_SERIVCE_ON;
+
+	char * cmd = "WR MR303 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
 }
 
 void SWCommunication::ClearCPUError()

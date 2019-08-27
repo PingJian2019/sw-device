@@ -30,6 +30,32 @@ public:
 	void StopCommnuication();
 	void ClearCPUError();
 
+	void ReadDM0to10();
+	void ReadMR500to503();
+	void ReadAlarmInfo();
+
+	void WritePIDRun();
+
+	void WriteLoadClear0();
+	void WriteDispClear0();
+
+	void WriteJog1Start();
+	void WriteJog1Stop();
+
+	void WriteJog2Start();
+	void WriteJog2Stop();
+
+	void WriteJog3Start();
+	void WriteJog3Stop();
+
+	void WritePreLoadLoad();
+	void WritePreDispLoad();
+
+	void WriteSwitchModel();
+	void WriteTestStartStop();
+	void WriteClearError();
+	void WriteServiceOn();
+
 	void RDMRData(int MR);
 	void RDSMRData(int MRStart, int num);
 
