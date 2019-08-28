@@ -10,6 +10,7 @@
 #include <functional>
 #include <chrono>
 #include <mutex>
+#include <string>
 
 #include <vector>
 
@@ -34,6 +35,13 @@ public:
 	void ReadMR500to503();
 	void ReadAlarmInfo();
 
+	void ReadLoadPeakValley();
+	void ReadDispPeakValley();
+
+	void ReadDMSection1();
+	void ReadDMSection2();
+	void ReadDMSection3();
+
 	void WritePIDRun();
 
 	void WriteLoadClear0();
@@ -55,6 +63,25 @@ public:
 	void WriteTestStartStop();
 	void WriteClearError();
 	void WriteServiceOn();
+
+	void WriteDispAlarmLimits(std::string uplimit, std::string lowlimit);
+	void WriteLoadAlarmLimits(std::string uplimit, std::string lowlimit);
+
+	void WriteDispLimits(std::string uplimit, std::string lowlimit);
+	void WriteLoadLimits(std::string uplimit, std::string lowlimit);
+
+	void WritePreDispParas(std::string dispValue, std::string speedValue);
+	void WritePreLoadParas(std::string loadValue, std::string speedValue);
+
+	void WriteDispFreqAndCount(std::string freq, std::string count);
+	void WriteLoadFreqAndCount(std::string freq, std::string count);
+
+	void WriteWaveCompensation(std::string comp, std::string inputFilter);
+
+	void WriteJogSpeed(std::string speed);
+
+	void WriteLoadSensorAlign(std::string kValue, std::string bValue);
+
 
 	void RDMRData(int MR);
 	void RDSMRData(int MRStart, int num);

@@ -85,7 +85,8 @@ void SWCommunication::downlinkFun()
 		if (result)
 		{
 			std::unique_lock<std::mutex> lock(m_waitResmutex);
-			m_waitResConVar.wait(lock);
+			std::chrono::milliseconds timespan(2000);
+			m_waitResConVar.wait_for(lock, timespan);
 			if (m_receiveData)
 			{
 				m_receiveData->ReceiveData(message.m_messType, m_buffer, m_bufferLen);
@@ -191,6 +192,76 @@ void SWCommunication::ReadAlarmInfo()
 	message.m_priority = PRIORITY_THREE;
 
 	char * cmd = "RDS MR600 5\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadDispPeakValley()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_DISP_PEAK_VALLEY;
+	message.m_priority = PRIORITY_THREE;
+
+	char * cmd = "RDS DM168 2\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadLoadPeakValley()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_LOAD_PEAK_VALLEY;
+	message.m_priority = PRIORITY_THREE;
+
+	char * cmd = "RDS DM122 2\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadDMSection1()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_DMSECTION1;
+	//message.m_priority = PRIORITY_THREE;
+
+	char * cmd = "RDS DM100 13\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadDMSection2()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_DMSECTION2;
+	//message.m_priority = PRIORITY_THREE;
+
+	char * cmd = "RDS DM150 11\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadDMSection3()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_DMSECTION3;
+	//message.m_priority = PRIORITY_THREE;
+
+	char * cmd = "RDS DM200 3\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -390,6 +461,213 @@ void SWCommunication::WriteServiceOn()
 
 	message.m_downlinkDataLen = cmdLen;
 	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteDispAlarmLimits(std::string uplimit, std::string lowlimit)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_DISP_ALARM_LIMITS;
+
+	std::string cmd;
+	cmd = "WRS DM110.S 2 ";
+	cmd += uplimit;
+	cmd += " ";
+	cmd += lowlimit;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteLoadAlarmLimits(std::string uplimit, std::string lowlimit)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_LOAD_ALARM_LIMITS;
+
+	std::string cmd;
+	cmd = "WRS DM154.S 2 ";
+	cmd += uplimit;
+	cmd += " ";
+	cmd += lowlimit;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteDispLimits(std::string uplimit, std::string lowlimit)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_DISP_LIMITS;
+
+	std::string cmd;
+	cmd = "WRS DM150.S 2 ";
+	cmd += uplimit;
+	cmd += " ";
+	cmd += lowlimit;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteLoadLimits(std::string uplimit, std::string lowlimit)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_LOAD_LIMITS;
+
+	std::string cmd;
+	cmd = "WRS DM106.S 2 ";
+	cmd += uplimit;
+	cmd += " ";
+	cmd += lowlimit;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WritePreDispParas(std::string dispValue, std::string speedValue)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_PREDISP_PARAS;
+
+	std::string cmd;
+	cmd = "WRS DM164.S 2 ";
+	cmd += dispValue;
+	cmd += " ";
+	cmd += speedValue;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WritePreLoadParas(std::string loadValue, std::string speedValue)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_PRELOAD_PARAS;
+
+	std::string cmd;
+	cmd = "WRS DM118.S 2 ";
+	cmd += loadValue;
+	cmd += " ";
+	cmd += speedValue;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteDispFreqAndCount(std::string freq, std::string count)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_DISP_FREQ_COUNT;
+
+	std::string cmd;
+	cmd = "WRS DM158.S 2 ";
+	cmd += freq;
+	cmd += " ";
+	cmd += count;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteLoadFreqAndCount(std::string freq, std::string count)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_LOAD_FREQ_COUNT;
+
+	std::string cmd;
+	cmd = "WRS DM114.S 2 ";
+	cmd += freq;
+	cmd += " ";
+	cmd += count;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteWaveCompensation(std::string comp, std::string inputFilter)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_WAVEFORM_COMPENSATION;
+
+	std::string cmd;
+	cmd = "WRS DM202.S 2 ";
+	cmd += comp;
+	cmd += " ";
+	cmd += inputFilter;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJogSpeed(std::string speed)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG_SPEED;
+
+	std::string cmd;
+	cmd = "WRS DM162.S 1 ";
+	cmd += speed;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteLoadSensorAlign(std::string kValue, std::string bValue)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_LOADSENSOR_ALIGN;
+
+	std::string cmd;
+	cmd = "WRS DM100.S 2 ";
+	cmd += kValue;
+	cmd += " ";
+	cmd += bValue;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
 	SendDownlinnkMessage(message);
 }
 
