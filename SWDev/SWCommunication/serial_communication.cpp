@@ -3,14 +3,15 @@
 #include "serial_communication.h"
 
 SerialCommunication::SerialCommunication(const QString portName, const QString baudRate)
+	: m_baudRate(baudRate)
 {
 	m_serialPort.setPortName(portName);
 	m_serialPort.setQueryMode(QextSerialBase::Polling);
-	m_serialPort.setBaudRate(GetBaudRateTypeByStr(baudRate));
+	/*m_serialPort.setBaudRate(GetBaudRateTypeByStr(baudRate));
 	m_serialPort.setDataBits(DATA_8);
 	m_serialPort.setParity(PAR_EVEN);
 	m_serialPort.setStopBits(STOP_1);
-	m_serialPort.setFlowControl(FLOW_OFF);
+	m_serialPort.setFlowControl(FLOW_OFF);*/
 	m_serialPort.setTimeout(10);
 }
 
@@ -25,7 +26,15 @@ bool SerialCommunication::SetupCommunication()
  
 	//Open the serial port
 	result = m_serialPort.open(QIODevice::ReadWrite);
-	
+	if (result)
+	{
+		m_serialPort.setBaudRate(GetBaudRateTypeByStr(m_baudRate));
+		m_serialPort.setDataBits(DATA_8);
+		m_serialPort.setParity(PAR_EVEN);
+		m_serialPort.setStopBits(STOP_1);
+		m_serialPort.setFlowControl(FLOW_OFF);
+	}
+
 	return result;
 }
 

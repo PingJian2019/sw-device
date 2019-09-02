@@ -12,7 +12,7 @@ TestSetupView::TestSetupView(QWidget * parent, ReceiveDataManage * receiveData)
 	, m_limitsDlgView(this, receiveData)
 	, m_underPeakDlgView(this)
 	, m_adjustMoverDlgView(this)
-	, m_presetPropDlgView(this)
+	, m_presetPropDlgView(this, receiveData)
 	, m_waveFormSetupDlgView(this,receiveData)
 	, m_waveFormCompenDlgView(this,receiveData)
 	, m_standardDataSetupDlgView(this)
@@ -60,10 +60,54 @@ void TestSetupView::CreateConnection()
 	connect(ui.m_peakValleyDataSetupBtn, SIGNAL(clicked()), this, SLOT(OnPeakValleyDataSetupBtnClicked()));
 
 	connect(&m_waveFormSetupDlgView, SIGNAL(SigModelChanged(int)), &m_testGroupView, SLOT(OnModelChanged(int)));
+	connect(&m_presetPropDlgView, SIGNAL(SigNotifyPreSetDispValue(QString)), this, SLOT(OnRecSetPreDispValue(QString)));
+	connect(&m_presetPropDlgView, SIGNAL(SigNotifyPreSetLoadValue(QString)), this, SLOT(OnRecSetPreLoadVlaue(QString)));
+
+	connect(m_receiveData, SIGNAL(SigRecDMSection1(int, QString)), this, SLOT(OnRecPreLoadValue(int, QString)));
+	connect(m_receiveData, SIGNAL(SigRecDMSection2(int, QString)), this, SLOT(OnRecPreDispValue(int, QString)));
+
 
 	connect(m_receiveData, SIGNAL(SigStartStop(int, QString)), this, SLOT(OnRecStartStop(int, QString)));
 	connect(m_receiveData, SIGNAL(SigServerOnOff(int, QString)), this, SLOT(OnServerOnOff(int, QString)));
 
+}
+
+void TestSetupView::OnRecSetPreDispValue(QString data)
+{
+	QString showDispValue = "PreSet Disp:" + data + "mm";
+	ui.m_presetOneBtn->setText(showDispValue);
+}
+
+void TestSetupView::OnRecSetPreLoadVlaue(QString data)
+{
+	QString showloadValue = "PreSet Load:" + data + "N";
+	ui.m_presetTwoBtn->setText(showloadValue);
+}
+
+void TestSetupView::OnRecPreDispValue(int type, QString data)
+{
+	QStringList stringList = data.split(" ");
+	if (stringList.length() < 8)
+	{
+		return;
+	}
+
+	QString preDisValue = QString::number(stringList[7].toInt());
+	QString showDispValue = "PreSet Disp:" + preDisValue + "mm";
+	ui.m_presetOneBtn->setText(showDispValue);
+}
+
+void TestSetupView::OnRecPreLoadValue(int type, QString data)
+{
+	QStringList stringList = data.split(" ");
+	if (stringList.length() < 10)
+	{
+		return;
+	}
+
+	QString preloadValue = QString::number(stringList[9].toInt());
+	QString showloadValue = "PreSet Load:" + preloadValue + "N";
+	ui.m_presetTwoBtn->setText(showloadValue);
 }
 
 void TestSetupView::OnRecStartStop(int type, QString data)

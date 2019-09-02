@@ -57,5 +57,10 @@ signals:
 	void SigStartStop(int type, QString data);
 	void SigServerOnOff(int type, QString data);
 
+	//preset paras
+	void SigPreSetDispParas(int type, QString data);
+	void SigPreSetLoadParas(int type, QString data);
+
+
 private:
 };

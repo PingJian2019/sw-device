@@ -94,6 +94,12 @@ void ReceiveDataManage::ReceiveData(MessageType type, std::string data)
 		emit SigServerOnOff(type, data.c_str());
 		break;
 
+		//preset paras
+	case MESS_WRITE_PREDISP_PARAS:
+		emit SigPreSetDispParas(type, data.c_str());
+		break;
+	case MESS_WRITE_PRELOAD_PARAS:
+		emit SigPreSetLoadParas(type, data.c_str());
+		break;		
 	}
-	int b = 0;
 }

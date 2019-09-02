@@ -17,6 +17,7 @@ private:
 	BaudRateType GetBaudRateTypeByStr(const QString baudRate);
 private:
 	Win_QextSerialPort m_serialPort;
+	QString				m_baudRate;
 };
 
 

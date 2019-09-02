@@ -63,6 +63,13 @@ private slots:
 	void OnStartStopBtnClicked();
 	void OnServerBtnClicked();
 
+	void OnRecSetPreDispValue(QString data);
+	void OnRecSetPreLoadVlaue(QString data);
+
+
+	void OnRecPreDispValue(int type, QString data);
+	void OnRecPreLoadValue(int type, QString data);
+
 
 	void OnRecStartStop(int type, QString data);
 	void OnServerOnOff(int type, QString data);

@@ -83,7 +83,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_2">
+         <widget class="QLineEdit" name="m_preDispValueLineEdit">
           <property name="minimumSize">
            <size>
             <width>120</width>
@@ -144,7 +144,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_3">
+         <widget class="QLineEdit" name="m_preDispRateLineEdit">
           <property name="minimumSize">
            <size>
             <width>120</width>
@@ -246,7 +246,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_4">
+         <widget class="QLineEdit" name="m_preLoadValueLineEdit">
           <property name="minimumSize">
            <size>
             <width>120</width>
@@ -307,7 +307,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_5">
+         <widget class="QLineEdit" name="m_preLoadRateLineEdit">
           <property name="minimumSize">
            <size>
             <width>120</width>
@@ -362,14 +362,14 @@
       <item>
        <widget class="QPushButton" name="m_okBtn">
         <property name="text">
-         <string>OK</string>
+         <string>Set</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="m_cancelBtn">
         <property name="text">
-         <string>Cancel</string>
+         <string>Ok</string>
         </property>
        </widget>
       </item>
