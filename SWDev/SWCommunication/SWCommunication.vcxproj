@@ -111,7 +111,10 @@
     <ClInclude Include="QextSerialPort\qextserialenumerator.h" />
     <QtMoc Include="QextSerialPort\win_qextserialport.h" />
     <ClInclude Include="serial_communication.h" />
-    <ClInclude Include="SWCommunication.h" />
+    <QtMoc Include="SWCommunication.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtSerialPort;.\..\common</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtSerialPort</IncludePath>
+    </QtMoc>
     <ClInclude Include="swcommunication_global.h" />
   </ItemGroup>
   <ItemGroup>

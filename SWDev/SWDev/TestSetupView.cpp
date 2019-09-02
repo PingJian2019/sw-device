@@ -1,20 +1,23 @@
 #include "TestSetupView.h"
 
 #include <QMouseEvent>
+#include "SWCommunication.h"
 
-TestSetupView::TestSetupView(QWidget * parent /* = NULL */)
+TestSetupView::TestSetupView(QWidget * parent, ReceiveDataManage * receiveData)
 	: QMainWindow(parent)
 	, m_testGroupView(this)
 	, m_waveFormView(this)
 	, m_peakValleyView(this)
 	, m_dispLoadAxialView(this)
-	, m_limitsDlgView(this)
+	, m_limitsDlgView(this, receiveData)
 	, m_underPeakDlgView(this)
 	, m_adjustMoverDlgView(this)
 	, m_presetPropDlgView(this)
-	, m_waveFormSetupDlgView(this)
-	, m_waveFormCompenDlgView(this)
+	, m_waveFormSetupDlgView(this,receiveData)
+	, m_waveFormCompenDlgView(this,receiveData)
 	, m_standardDataSetupDlgView(this)
+	, m_alignLoadSensorDlgView(this, receiveData)
+	, m_receiveData(receiveData)
 {
 	ui.setupUi(this);
 
@@ -23,7 +26,6 @@ TestSetupView::TestSetupView(QWidget * parent /* = NULL */)
 	
 	setWindowFlags((this->windowFlags()) & (~Qt::WindowCloseButtonHint) &
 		(~Qt::WindowMaximizeButtonHint) & (~Qt::WindowMinimizeButtonHint));
-
 
 	InitView();
 	InitMoverTable();
@@ -41,8 +43,7 @@ void TestSetupView::CreateConnection()
 	connect(ui.actionLimits, SIGNAL(triggered()), this, SLOT(OnLimitsAction()));
 	connect(ui.actionStandardData, SIGNAL(triggered()), this, SLOT(OnStandardDataAction()));
 	connect(ui.actionPeekValleyData, SIGNAL(triggered()), this, SLOT(OnPeakValleyDataAction()));
-
-
+	connect(ui.ActionClaibration, SIGNAL(triggered()), this, SLOT(OnCalibrationAction()));
 
 	connect(ui.m_limitsBtn, SIGNAL(clicked()), this, SLOT(OnLimitsBtnClicked()));
 	connect(ui.m_adjustMoverBtn, SIGNAL(clicked()), this, SLOT(OnAdjustMoverBtnClicked()));
@@ -58,9 +59,53 @@ void TestSetupView::CreateConnection()
 	connect(ui.m_standardDataSetupBtn, SIGNAL(clicked()), this, SLOT(OnStandardDataSetupBtnClicked()));
 	connect(ui.m_peakValleyDataSetupBtn, SIGNAL(clicked()), this, SLOT(OnPeakValleyDataSetupBtnClicked()));
 
-
 	connect(&m_waveFormSetupDlgView, SIGNAL(SigModelChanged(int)), &m_testGroupView, SLOT(OnModelChanged(int)));
-	
+
+	connect(m_receiveData, SIGNAL(SigStartStop(int, QString)), this, SLOT(OnRecStartStop(int, QString)));
+	connect(m_receiveData, SIGNAL(SigServerOnOff(int, QString)), this, SLOT(OnServerOnOff(int, QString)));
+
+}
+
+void TestSetupView::OnRecStartStop(int type, QString data)
+{
+	if (data == "OK\r\n")
+	{
+		QString strText = ui.m_startBtn->text();
+		if (strText == "Start")
+		{
+			ui.m_startBtn->setText("Stop");
+		}
+		else if (strText == "Stop")
+		{
+			ui.m_startBtn->setText("Start");
+		}
+		else
+		{
+		}
+	}
+
+	ui.m_startBtn->setEnabled(true);
+}
+
+void TestSetupView::OnServerOnOff(int type, QString data)
+{
+	if (data == "OK\r\n")
+	{
+		QString strText = ui.m_serverBtn->text();
+		if (strText == "Server On")
+		{
+			ui.m_serverBtn->setText("Server Off");
+		}
+		else if (strText == "Server Off")
+		{
+			ui.m_serverBtn->setText("Server On");
+		}
+		else
+		{
+		}
+	}
+
+	ui.m_serverBtn->setEnabled(true);
 }
 
 void TestSetupView::InitView()
@@ -200,33 +245,15 @@ void TestSetupView::OnWaveFormSetupBtnClicked()
 
 void TestSetupView::OnStartStopBtnClicked()
 {
-	QString strText = ui.m_startBtn->text();
-	if (strText == "Start")
-	{
-		ui.m_startBtn->setText("Stop");
-	}
-	else if (strText == "Stop")
-	{
-		ui.m_startBtn->setText("Start");
-	}
-	else
-	{ }
+	ui.m_startBtn->setEnabled(false);
+	SWCommunication::GetInstance()->WriteTestStartStop();
+
 }
 
 void TestSetupView::OnServerBtnClicked()
 {
-	QString strText = ui.m_serverBtn->text();
-	if (strText == "Server On")
-	{
-		ui.m_serverBtn->setText("Server Off");
-	}
-	else if (strText == "Server Off")
-	{
-		ui.m_serverBtn->setText("Server On");
-	}
-	else
-	{
-	}
+	ui.m_serverBtn->setEnabled(false);
+	SWCommunication::GetInstance()->WriteServiceOn();
 }
 
 void TestSetupView::OnWaveFormCompenBtnClicked()
@@ -242,4 +269,9 @@ void TestSetupView::OnStandardDataSetupBtnClicked()
 void TestSetupView::OnPeakValleyDataSetupBtnClicked()
 {
 	m_peakValleyDataSetupDlgView.exec();
+}
+
+void TestSetupView::OnCalibrationAction()
+{
+	m_alignLoadSensorDlgView.exec();
 }

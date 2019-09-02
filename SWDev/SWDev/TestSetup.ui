@@ -1234,7 +1234,7 @@ font: 10pt &quot;Arial&quot;;</string>
             </size>
            </property>
            <property name="text">
-            <string>Start</string>
+            <string>Stop</string>
            </property>
           </widget>
          </item>
@@ -1296,7 +1296,7 @@ font: 10pt &quot;Arial&quot;;</string>
             </size>
            </property>
            <property name="text">
-            <string>Server On</string>
+            <string>Server Off</string>
            </property>
           </widget>
          </item>
@@ -1342,12 +1342,11 @@ font: 10pt &quot;Arial&quot;;</string>
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuTest_File">
+   <widget class="QMenu" name="menuCalibration">
     <property name="title">
-     <string>Test File</string>
+     <string>Calibration</string>
     </property>
-    <addaction name="actionNew"/>
-    <addaction name="actionOpen"/>
+    <addaction name="ActionClaibration"/>
    </widget>
    <widget class="QMenu" name="menuTest_Limits">
     <property name="title">
@@ -1382,16 +1381,16 @@ font: 10pt &quot;Arial&quot;;</string>
     <addaction name="actionPeak_Valley"/>
     <addaction name="actionDispLoad"/>
    </widget>
-   <addaction name="menuTest_File"/>
+   <addaction name="menuCalibration"/>
    <addaction name="menuTest_Limits"/>
    <addaction name="menuWaveform"/>
    <addaction name="menuData_Acquisition"/>
    <addaction name="menuRun_Stop"/>
    <addaction name="menuShow"/>
   </widget>
-  <action name="actionNew">
+  <action name="ActionClaibration">
    <property name="text">
-    <string>New</string>
+    <string>Calibration</string>
    </property>
   </action>
   <action name="actionOpen">

@@ -49,9 +49,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SWCommunication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="QextSerialPort\qextserialenumerator.h">
       <Filter>QextSerialPort</Filter>
     </ClInclude>
@@ -76,6 +73,9 @@
     </QtMoc>
     <QtMoc Include="QextSerialPort\win_qextserialport.h">
       <Filter>QextSerialPort</Filter>
+    </QtMoc>
+    <QtMoc Include="SWCommunication.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>

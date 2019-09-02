@@ -5,6 +5,7 @@ SWCommunication * SWCommunication::m_instance = NULL;
 SWCommunication::SWCommunication()
 	: m_communication(NULL)
 	, m_receiveData(NULL)
+	, m_strReceiveMessage("")
 {
 	memset(m_buffer, 0, 1024);
 
@@ -89,7 +90,9 @@ void SWCommunication::downlinkFun()
 			m_waitResConVar.wait_for(lock, timespan);
 			if (m_receiveData)
 			{
-				m_receiveData->ReceiveData(message.m_messType, m_buffer, m_bufferLen);
+				//m_receiveData->ReceiveData(message.m_messType, m_buffer, m_bufferLen);
+				m_receiveData->ReceiveData(message.m_messType, m_strReceiveMessage);
+				m_strReceiveMessage = "";
 			}
 		}
 
@@ -114,9 +117,10 @@ void SWCommunication::UplinkFun()
 		if (bufferLen > 0)
 		{
 			std::unique_lock<std::mutex> lock(m_waitResmutex);
-			memset(m_buffer, 0, 1024);
-			memcpy(m_buffer, buffer, bufferLen);
-			m_bufferLen = bufferLen;
+			m_strReceiveMessage = (char*)buffer;
+			//memset(m_buffer, 0, 1024);
+			////memcpy(m_buffer, buffer, bufferLen);
+			//m_bufferLen = bufferLen;
 			m_waitResConVar.notify_one();
 		}
 
@@ -133,7 +137,7 @@ void SWCommunication::StartCommunication()
 	char * cmd = "CR\r";
 	int cmdLen = strlen(cmd);
 
-	//unsigned char command[3] = { 0x43,0x52,0x0D };
+	unsigned char command[3] = { 0x43,0x52,0x0D };
 
 	message.m_downlinkDataLen = cmdLen;
 	memcpy(message.m_downlinkData, cmd, cmdLen);

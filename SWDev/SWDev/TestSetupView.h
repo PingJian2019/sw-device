@@ -16,12 +16,15 @@
 #include "WaveFormCompensationDlgView.h"
 #include "StandardDataSetupDlgView.h"
 #include "PeakValleyDataSetupDlgView.h"
+#include "AlignLoadSensorDlgView.h"
+
+#include "ReceiveDataManage.h"
 
 class TestSetupView : public QMainWindow
 {
 	Q_OBJECT
 public:
-	TestSetupView(QWidget * parent = NULL);
+	TestSetupView(QWidget * parent = NULL, ReceiveDataManage * receiveData = NULL);
 
 protected:
 	bool eventFilter(QObject *watched, QEvent *event);
@@ -42,6 +45,7 @@ private slots:
 	void OnLimitsAction();
 	void OnStandardDataAction();
 	void OnPeakValleyDataAction();
+	void OnCalibrationAction();
 
 	void OnLimitsBtnClicked();
 	void OnUndePeakBtnClicked();
@@ -59,6 +63,10 @@ private slots:
 	void OnStartStopBtnClicked();
 	void OnServerBtnClicked();
 
+
+	void OnRecStartStop(int type, QString data);
+	void OnServerOnOff(int type, QString data);
+
 private:
 	Ui::TestSetupForm ui;
 
@@ -75,5 +83,10 @@ private:
 	WaveFormCompensationDlgView m_waveFormCompenDlgView;
 	StandardDataSetupDlgView m_standardDataSetupDlgView;
 	PeakValleyDataSetupDlgView m_peakValleyDataSetupDlgView;
+	AligLoadSensorDlgView	m_alignLoadSensorDlgView;
+
+
+
+	ReceiveDataManage *		m_receiveData;
 
 };

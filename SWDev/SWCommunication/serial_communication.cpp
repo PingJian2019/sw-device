@@ -8,7 +8,7 @@ SerialCommunication::SerialCommunication(const QString portName, const QString b
 	m_serialPort.setQueryMode(QextSerialBase::Polling);
 	m_serialPort.setBaudRate(GetBaudRateTypeByStr(baudRate));
 	m_serialPort.setDataBits(DATA_8);
-	m_serialPort.setParity(PAR_NONE);
+	m_serialPort.setParity(PAR_EVEN);
 	m_serialPort.setStopBits(STOP_1);
 	m_serialPort.setFlowControl(FLOW_OFF);
 	m_serialPort.setTimeout(10);

@@ -14,8 +14,11 @@
 
 #include <vector>
 
-class SWCOMMUNICATION_EXPORT SWCommunication
+#include <QObject>
+
+class SWCOMMUNICATION_EXPORT SWCommunication : public QObject
 {
+	Q_OBJECT
 public:
 	SWCommunication();
 	~SWCommunication();
@@ -128,6 +131,7 @@ private:
 	int							m_wdsheaderLen;
 
 	IReceiveData*				m_receiveData;
+	std::string					m_strReceiveMessage;
 
 	static SWCommunication *	m_instance;
 };

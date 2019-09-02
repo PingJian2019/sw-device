@@ -17,23 +17,32 @@ class SWMainWindow : public QMainWindow
 
 public:
 	SWMainWindow(QWidget *parent = Q_NULLPTR);
+	~SWMainWindow();
 
-	void InitView();
+	void Init();
+
+private slots:
+	void OnRecStartCom(int type, QString data);
+	void OnRecStopCom(int type, QString data);
 
 private:
+	void InitView();
 	void InitCommunication();
+	void InitDev();
+
+	void ReadDMData();
 
 	void CreateConnection();
 
 private:
 	Ui::SWMainWindowClass ui;
 
+	bool				m_isInitCom;
+	bool				m_isInitDev;
+	bool				m_isRecEndDev;
+
 	ReceiveDataManage	m_receiveDataManage;
 
 
 	TestSetupView m_testSetupView;
-	/*TestSatusGroupView m_testGroupView;
-	WaveFormView m_waveFormView;
-	PeakValleyView m_peakValleyView;
-	DispLoadAxialView m_dispLoadAxialView;*/
 };

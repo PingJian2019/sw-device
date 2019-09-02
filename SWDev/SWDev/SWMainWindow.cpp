@@ -5,14 +5,39 @@
 
 SWMainWindow::SWMainWindow(QWidget *parent)
 	: QMainWindow(parent)
-	, m_testSetupView(this)
+	, m_testSetupView(this,&m_receiveDataManage)
+	, m_isInitCom(false)
+	, m_isInitDev(false)
+	, m_isRecEndDev(false)
 {
 	ui.setupUi(this);
+
+	char cmd[2] = { 0x0D, 0x0A };
 
 	QRect rect = QApplication::desktop()->screenGeometry();
 	setMinimumSize(QSize(rect.width(), rect.height()));
 
+	//InitCommunication();
+	CreateConnection();
+}
+
+SWMainWindow::~SWMainWindow()
+{
+	SWCommunication * pInstance = SWCommunication::GetInstance();
+	pInstance->StopCommnuication();
+	/*while (!m_isRecEndDev)
+	{
+		Sleep(10);
+	}*/
+
+	int a = 0;
+}
+
+void SWMainWindow::Init()
+{
+	InitView();
 	InitCommunication();
+	InitDev();
 }
 
 void SWMainWindow::InitView()
@@ -24,41 +49,44 @@ void SWMainWindow::InitCommunication()
 {
 	//init serial port
 	SWCommunication * pInstance = SWCommunication::GetInstance();
-	pInstance->InitializeCommunication("COM1", "9600");
+	m_isInitCom = pInstance->InitializeCommunication("COM3", "115200");
 	pInstance->SetIReceiveData(&m_receiveDataManage);
+}
 
-	//init device
+void SWMainWindow::InitDev()
+{
+	SWCommunication * pInstance = SWCommunication::GetInstance();
 	pInstance->StartCommunication();
-	pInstance->ReadDM0to10();
-	pInstance->ReadMR500to503();
-	pInstance->ReadAlarmInfo();
-	pInstance->WriteJog1Start();
-	pInstance->WriteJog1Stop();
-
-	//pInstance->RDDMData(200);
-	//pInstance->RDSDMData(200, 3);
-
-	//pInstance->RDMRData(500);
-	//pInstance->RDSMRData(500,3);
-
-
-	/*pInstance->WRDMData(200, "0540000");
-	std::vector<char *>datalist;
-	datalist.push_back("04555");
-	datalist.push_back("djklajd");
-	pInstance->WRSDMData(200, datalist);*/
-
-
-	//init device
-	//pInstance->StartCommunication();
-	/*DownlinkMessage message;
-	message.m_downlinkDataLen = 3;
-	unsigned char command[3] = { 0x43,0x52,0x0D };
-	memcpy(message.m_downlinkData, command, 3);
-	pInstance->SendDownlinnkMessage(message);*/
 }
 
 void SWMainWindow::CreateConnection()
 {
+	connect(&m_receiveDataManage, SIGNAL(SigRecStartCommunication(int, QString)), this, SLOT(OnRecStartCom(int,QString)));
+	connect(&m_receiveDataManage, SIGNAL(SigRecStopCommunication(int, QString)), this, SLOT(OnRecStopCom(int,QString)));
+}
 
+void SWMainWindow::ReadDMData()
+{
+	SWCommunication * pInstance = SWCommunication::GetInstance();
+	pInstance->ReadDMSection1();
+	pInstance->ReadDMSection2();
+	pInstance->ReadDMSection3();
+}
+
+void SWMainWindow::OnRecStartCom(int type, QString data)
+{
+	if (data == "CC\r\n")
+	{
+		m_isInitDev = true;
+		ReadDMData();
+	}
+	else
+	{
+		m_isInitDev = false;
+	}
+}
+
+void SWMainWindow::OnRecStopCom(int type, QString data)
+{
+	m_isRecEndDev = true;
 }

@@ -233,7 +233,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="m_level1LineEdit">
               <property name="minimumSize">
                <size>
                 <width>110</width>
@@ -272,7 +272,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2">
+             <widget class="QLineEdit" name="m_level2LineEdit">
               <property name="minimumSize">
                <size>
                 <width>110</width>
@@ -331,7 +331,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_5">
+             <widget class="QLineEdit" name="m_frequencyLineEdit">
               <property name="minimumSize">
                <size>
                 <width>110</width>
@@ -367,7 +367,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_6">
+             <widget class="QLineEdit" name="m_countLineEdit">
               <property name="minimumSize">
                <size>
                 <width>110</width>
@@ -470,7 +470,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_3">
+           <widget class="QLineEdit" name="m_currentCountLineEdit">
             <property name="minimumSize">
              <size>
               <width>160</width>
@@ -547,7 +547,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="m_pidRunBtn">
        <property name="minimumSize">
         <size>
          <width>300</width>

@@ -81,6 +81,9 @@
     <ClCompile Include="PeakValleyDataSetupDlgView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AlignLoadSensorDlgView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="SWMainWindow.h">
@@ -117,6 +120,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="WaveFormSetupDlgView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="LimitsDlgView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ReceiveDataManage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AlignLoadSensorDlgView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -166,6 +178,9 @@
     <QtUic Include="PeakValleyDataSetupDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="AlignLoadSensor.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="SWMainWindow.qrc">
@@ -173,12 +188,6 @@
     </QtRcc>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ReceiveDataManage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LimitsDlgView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UnderPeakDlgView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
