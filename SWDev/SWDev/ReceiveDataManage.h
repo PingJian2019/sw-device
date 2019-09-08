@@ -61,6 +61,15 @@ signals:
 	void SigPreSetDispParas(int type, QString data);
 	void SigPreSetLoadParas(int type, QString data);
 
+	//jog speed
+	void SigSetJogSpeed(int type, QString data);
 
+	//clear 0
+	void SigClearDisp(int type, QString data);
+	void SigClearLoad(int type, QString data);
+
+
+	//jog move
+	void SigJogMove(int type, QString data);
 private:
 };

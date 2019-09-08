@@ -131,6 +131,9 @@
     <QtMoc Include="AlignLoadSensorDlgView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="AdjustMoverDlgView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="SWMainWindow.ui">
@@ -189,9 +192,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UnderPeakDlgView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AdjustMoverDlgView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -312,10 +312,10 @@ void SWCommunication::WriteDispClear0()
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::WriteJog1Start()
+void SWCommunication::WriteJog1UpStart()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_JOG1_START;
+	message.m_messType = MESS_WRITE_JOG1_UP_START;
 
 	char * cmd = "WR MR201 1\r";
 	int cmdLen = strlen(cmd);
@@ -325,10 +325,10 @@ void SWCommunication::WriteJog1Start()
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::WriteJog1Stop()
+void SWCommunication::WriteJog1UpStop()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_JOG1_STOP;
+	message.m_messType = MESS_WRITE_JOG1_UP_STOP;
 
 	char * cmd = "WR MR201 0\r";
 	int cmdLen = strlen(cmd);
@@ -338,10 +338,10 @@ void SWCommunication::WriteJog1Stop()
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::WriteJog2Start()
+void SWCommunication::WriteJog1DownStart()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_JOG2_START;
+	message.m_messType = MESS_WRITE_JOG1_DOWN_START;
 
 	char * cmd = "WR MR202 1\r";
 	int cmdLen = strlen(cmd);
@@ -351,10 +351,10 @@ void SWCommunication::WriteJog2Start()
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::WriteJog2Stop()
+void SWCommunication::WriteJog1DownStop()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_JOG2_STOP;
+	message.m_messType = MESS_WRITE_JOG1_DOWN_STOP;
 
 	char * cmd = "WR MR202 0\r";
 	int cmdLen = strlen(cmd);
@@ -364,10 +364,10 @@ void SWCommunication::WriteJog2Stop()
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::WriteJog3Start()
+void SWCommunication::WriteJog2UpStart()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_JOG3_START;
+	message.m_messType = MESS_WRITE_JOG2_UP_START;
 
 	char * cmd = "WR MR203 1\r";
 	int cmdLen = strlen(cmd);
@@ -377,12 +377,90 @@ void SWCommunication::WriteJog3Start()
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::WriteJog3Stop()
+void SWCommunication::WriteJog2UpStop()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_JOG3_STOP;
+	message.m_messType = MESS_WRITE_JOG2_UP_STOP;
 
 	char * cmd = "WR MR203 0\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog2DownStart()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG2_DOWN_START;
+
+	char * cmd = "WR MR204 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog2DownStop()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG2_DOWN_STOP;
+
+	char * cmd = "WR MR204 0\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog3UpStart()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG3_UP_START;
+
+	char * cmd = "WR MR205 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog3UpStop()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG3_UP_STOP;
+
+	char * cmd = "WR MR205 0\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog3DownStart()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG3_DOWN_START;
+
+	char * cmd = "WR MR206 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog3DownStop()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG3_DOWN_STOP;
+
+	char * cmd = "WR MR206 0\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;

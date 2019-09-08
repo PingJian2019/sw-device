@@ -100,6 +100,35 @@ void ReceiveDataManage::ReceiveData(MessageType type, std::string data)
 		break;
 	case MESS_WRITE_PRELOAD_PARAS:
 		emit SigPreSetLoadParas(type, data.c_str());
-		break;		
+		break;	
+
+		//jog speed
+	case MESS_WRITE_JOG_SPEED:
+		emit SigSetJogSpeed(type, data.c_str());
+		break;
+
+		//clear 0
+	case MESS_WRITE_DISP_CLEAR:
+		emit SigClearDisp(type, data.c_str());
+		break;
+	case MESS_WRITE_LOAD_CLEAR:
+		emit SigClearLoad(type, data.c_str());
+		break;
+
+		//jog move
+	case MESS_WRITE_JOG1_UP_START:
+	case MESS_WRITE_JOG1_UP_STOP:
+	case MESS_WRITE_JOG1_DOWN_START:
+	case MESS_WRITE_JOG1_DOWN_STOP:
+	case MESS_WRITE_JOG2_UP_START:
+	case MESS_WRITE_JOG2_UP_STOP:
+	case MESS_WRITE_JOG2_DOWN_START:
+	case MESS_WRITE_JOG2_DOWN_STOP:
+	case MESS_WRITE_JOG3_UP_START:
+	case MESS_WRITE_JOG3_UP_STOP:
+	case MESS_WRITE_JOG3_DOWN_START:
+	case MESS_WRITE_JOG3_DOWN_STOP:
+		emit SigJogMove(type, data.c_str());
+		break;
 	}
 }

@@ -50,14 +50,23 @@ public:
 	void WriteLoadClear0();
 	void WriteDispClear0();
 
-	void WriteJog1Start();
-	void WriteJog1Stop();
+	void WriteJog1UpStart();
+	void WriteJog1UpStop();
 
-	void WriteJog2Start();
-	void WriteJog2Stop();
+	void WriteJog1DownStart();
+	void WriteJog1DownStop();
 
-	void WriteJog3Start();
-	void WriteJog3Stop();
+	void WriteJog2UpStart();
+	void WriteJog2UpStop();
+
+	void WriteJog2DownStart();
+	void WriteJog2DownStop();
+
+	void WriteJog3UpStart();
+	void WriteJog3UpStop();
+
+	void WriteJog3DownStart();
+	void WriteJog3DownStop();
 
 	void WritePreLoadLoad();
 	void WritePreDispLoad();
