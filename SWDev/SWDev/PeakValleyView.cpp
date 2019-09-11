@@ -1,7 +1,8 @@
 #include"PeakValleyView.h"
 
-PeakValleyView::PeakValleyView(QWidget * parent)
+PeakValleyView::PeakValleyView(QWidget * parent, ReceiveDataManage * receiveData)
 	: QMainWindow(parent)
+	, m_receiveData(receiveData)
 {
 	ui.setupUi(this);
 
@@ -13,6 +14,21 @@ PeakValleyView::PeakValleyView(QWidget * parent)
 
 	InitTable();
 	InitTableData();
+}
+
+void PeakValleyView::CreateConnection()
+{
+
+}
+
+void PeakValleyView::OnRecDispPeakValley(int type, QString data)
+{
+
+}
+
+void PeakValleyView::OnRecLoadPeakValley(int type, QString data)
+{
+
 }
 
 void PeakValleyView::InitTable()

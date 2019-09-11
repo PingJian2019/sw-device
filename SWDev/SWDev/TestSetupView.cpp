@@ -5,13 +5,12 @@
 
 TestSetupView::TestSetupView(QWidget * parent, ReceiveDataManage * receiveData)
 	: QMainWindow(parent)
-	, m_testGroupView(this)
-	, m_waveFormView(this)
-	, m_peakValleyView(this)
-	, m_dispLoadAxialView(this)
+	, m_testGroupView(this, receiveData)
+	, m_waveFormView(this, receiveData)
+	, m_peakValleyView(this, receiveData)
+	, m_dispLoadAxialView(this, receiveData)
 	, m_limitsDlgView(this, receiveData)
-	, m_underPeakDlgView(this)
-	, m_adjustMoverDlgView(this)
+	, m_adjustMoverDlgView(this,receiveData)
 	, m_presetPropDlgView(this, receiveData)
 	, m_waveFormSetupDlgView(this,receiveData)
 	, m_waveFormCompenDlgView(this,receiveData)
@@ -60,6 +59,8 @@ void TestSetupView::CreateConnection()
 	connect(ui.m_peakValleyDataSetupBtn, SIGNAL(clicked()), this, SLOT(OnPeakValleyDataSetupBtnClicked()));
 
 	connect(&m_waveFormSetupDlgView, SIGNAL(SigModelChanged(int)), &m_testGroupView, SLOT(OnModelChanged(int)));
+	connect(&m_waveFormSetupDlgView, SIGNAL(SigUpdateTotalCountValue(QString)), &m_testGroupView, SLOT(OnUpdateTotalCountValue(QString)));
+
 	connect(&m_presetPropDlgView, SIGNAL(SigNotifyPreSetDispValue(QString)), this, SLOT(OnRecSetPreDispValue(QString)));
 	connect(&m_presetPropDlgView, SIGNAL(SigNotifyPreSetLoadValue(QString)), this, SLOT(OnRecSetPreLoadVlaue(QString)));
 

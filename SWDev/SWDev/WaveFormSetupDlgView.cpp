@@ -22,7 +22,6 @@ void WaveFormSetupDlgView::CreateConnection()
 
 	connect(ui.okButton, SIGNAL(clicked()), this, SLOT(OnSetBtnClicked()));
 	connect(&m_sineWaveSetupView, SIGNAL(SigCompleteSetParas()), this, SLOT(OnCompleteSetParas()));
-
 }
 
 void WaveFormSetupDlgView::OnSetBtnClicked()
@@ -34,5 +33,6 @@ void WaveFormSetupDlgView::OnSetBtnClicked()
 void WaveFormSetupDlgView::OnCompleteSetParas()
 {
 	ui.okButton->setEnabled(true);
-
+	QString TCountValue = m_sineWaveSetupView.GetCountString();
+	emit SigUpdateTotalCountValue(TCountValue);
 }

@@ -5,13 +5,16 @@
 #include <QPainter>
 #include <QTimer>
 
+#include "common_type.h"
+#include "ReceiveDataManage.h"
+
 #define BUFFERSIZE		100
 
 class WaveFormView : public QMainWindow
 {
 	Q_OBJECT
 public:
-	WaveFormView(QWidget * parent = NULL);
+	WaveFormView(QWidget * parent = NULL, ReceiveDataManage * receiveData = NULL);
 
 protected:
 	virtual void paintEvent(QPaintEvent *event);
@@ -57,6 +60,8 @@ private:
 
 	int				buffer[BUFFERSIZE];
 	int				buffer2[BUFFERSIZE];
+
+	ReceiveDataManage *		m_receiveData;
 
 	QImage			image;
 	QTimer			timer;

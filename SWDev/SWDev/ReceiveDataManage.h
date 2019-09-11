@@ -71,5 +71,13 @@ signals:
 
 	//jog move
 	void SigJogMove(int type, QString data);
+
+	//real time load and disp value
+	void SigRTLoadAndDispValue(int type, QString data);
+
+	//peak valley
+	void SigDispPeakValley(int type, QString data);
+	void SigLoadPeakValley(int type, QString data);
+
 private:
 };

@@ -26,7 +26,7 @@
 #define NUMPOINTTODRAW BUFFERSIZE
 
 
-WaveFormView::WaveFormView(QWidget * parent /* = NULL */)
+WaveFormView::WaveFormView(QWidget * parent, ReceiveDataManage * receiveData)
 	: QMainWindow(parent)
 	, maxvalue(0)
 	, minvalue(1000)
@@ -38,6 +38,7 @@ WaveFormView::WaveFormView(QWidget * parent /* = NULL */)
 	, m_lastDrawIndex(0)
 	, maxvalue2(0)
 	, minvalue2(1000)
+	, m_receiveData(receiveData)
 {
 	ui.setupUi(this);
 

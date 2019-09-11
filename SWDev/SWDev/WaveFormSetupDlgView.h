@@ -21,6 +21,7 @@ private slots:
 
 signals:
 	void SigModelChanged(int index);
+	void SigUpdateTotalCountValue(QString value);
 
 private:
 	ReceiveDataManage *	m_receiveData;

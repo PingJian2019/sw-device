@@ -13,6 +13,7 @@ public:
 
 public:
 	void SetModelParas();
+	QString GetCountString();
 
 private:
 	void CreateConnection();
@@ -22,7 +23,6 @@ private:
 	QString GetLevel1String();
 	QString GetLevel2String();
 	QString GetFreqencyString();
-	QString GetCountString();
 
 private slots :
 	void OnModelComboxIndexChanged(int index);

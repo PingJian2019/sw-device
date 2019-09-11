@@ -130,5 +130,18 @@ void ReceiveDataManage::ReceiveData(MessageType type, std::string data)
 	case MESS_WRITE_JOG3_DOWN_STOP:
 		emit SigJogMove(type, data.c_str());
 		break;
+
+		//real time load and disp
+	case MESS_READ_DM_0TO10:
+		emit SigRTLoadAndDispValue(type, data.c_str());
+		break;
+
+		//peak valley
+	case MESS_READ_DISP_PEAK_VALLEY:
+		emit SigDispPeakValley(type, data.c_str());
+		break;
+	case MESS_READ_LOAD_PEAK_VALLEY:
+		emit SigLoadPeakValley(type, data.c_str());
+		break;
 	}
 }
