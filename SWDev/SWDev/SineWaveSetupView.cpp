@@ -1,5 +1,6 @@
 #include "SineWaveSetupView.h"
 #include "SWCommunication.h"
+#include <QDebug>
 
 SineWaveSetupView::SineWaveSetupView(QWidget * parent, ReceiveDataManage * data)
 	:QWidget(parent)
@@ -28,8 +29,36 @@ void SineWaveSetupView::CreateConnection()
 	connect(m_receiveData, SIGNAL(SigLoadModeFreqCount(int, QString)), this, SLOT(OnRecSetLoadModeFreqCount(int, QString)));
 
 	connect(m_receiveData, SIGNAL(SigPIDRun(int, QString)), this, SLOT(OnRecPidRun(int, QString)));
+	connect(m_receiveData, SIGNAL(SigPIDRestore(int, QString)), this, SLOT(OnRecPidRestore(int, QString)));
 	connect(m_receiveData, SIGNAL(SigMR5002503(int, QString)), this, SLOT(OnRecPidResult(int, QString)));
+	connect(m_receiveData, SIGNAL(SigRecMR300to303(int, QString)), this, SLOT(OnRecCurrentModel(int, QString)));
+	connect(m_receiveData, SIGNAL(SigRTLoadAndDispValue(int, QString)), this, SLOT(OnRecCurrentCount(int, QString)));
 
+	
+}
+
+void SineWaveSetupView::OnRecCurrentCount(int type, QString data)
+{
+	QStringList stringList = data.split(" ");
+	if (stringList.length() == 6)
+	{
+		if (m_currentModel == MODE_DISP)
+		{
+			QString strCount = stringList[5];
+			int iCount = strCount.toInt();
+			strCount = QString::number(iCount);
+			ui.m_currentCountLineEdit->setText(strCount);
+		}
+		else if (m_currentModel == MODE_LOAD)
+		{
+			QString strCount = stringList[2];
+			int iCount = strCount.toInt();
+			strCount = QString::number(iCount);
+			ui.m_currentCountLineEdit->setText(strCount);
+		}
+		else
+		{ }
+	}
 
 }
 
@@ -141,13 +170,13 @@ void SineWaveSetupView::SetModelParas()
 	QString dispFreqValue = GetFreqencyString();
 	QString dispCountValue = GetCountString();
 
-	if (m_currentModel == 0)
+	if (m_currentModel == 1)
 	{
 		SWCommunication::GetInstance()->WriteDispLimits(dispUpValue.toStdString(), dispLowValue.toStdString());
 
 		SWCommunication::GetInstance()->WriteDispFreqAndCount(dispFreqValue.toStdString(), dispCountValue.toStdString());
 	}
-	else if(m_currentModel == 1)
+	else if(m_currentModel == 0)
 	{
 		SWCommunication::GetInstance()->WriteLoadLimits(dispUpValue.toStdString(), dispLowValue.toStdString());
 
@@ -183,7 +212,7 @@ void SineWaveSetupView::OnModelComboxIndexChanged(int index)
 
 void SineWaveSetupView::UpdateParasToUI()
 {
-	if (m_currentModel == 0)
+	if (m_currentModel == 1)
 	{
 		ui.m_level1LineEdit->setText(m_dispLowLimit);
 		ui.m_level2LineEdit->setText(m_dispUpLimit);
@@ -256,22 +285,70 @@ void SineWaveSetupView::OnRecPidRun(int type, QString data)
 {
 	if (data == "OK\r\n")
 	{
+		SWCommunication::GetInstance()->WritePIDRestore();
 		SWCommunication::GetInstance()->ReadMR500to503();
 	}
 
 	ui.m_pidRunBtn->setEnabled(true);
+}
 
+void SineWaveSetupView::OnRecPidRestore(int type, QString data)
+{
+	if (data == "OK\r\n")
+	{
+		//SWCommunication::GetInstance()->ReadMR500to503();
+	}
+	else
+	{
+
+	}
+}
+
+void SineWaveSetupView::OnRecCurrentModel(int type, QString data)
+{
+	QStringList stringlist = data.split(" ");
+	if (stringlist.length() >= 1)
+	{
+		QString strMode = stringlist[0];
+		m_currentModel = strMode.toInt();
+
+		disconnect(ui.m_modelCombox, SIGNAL(currentIndexChanged(int)), this, SLOT(OnModelComboxIndexChanged(int)));
+		ui.m_modelCombox->setCurrentIndex(m_currentModel);
+		connect(ui.m_modelCombox, SIGNAL(currentIndexChanged(int)), this, SLOT(OnModelComboxIndexChanged(int)));
+
+		//ui.m_modelCombox->setCurrentIndex(m_currentModel);
+		emit SigModelChanged(m_currentModel);
+	}
+	else
+	{
+		SWCommunication::GetInstance()->ReadMR300to303();
+	}
 }
 
 void SineWaveSetupView::OnRecPidResult(int type, QString data)
 {
 	QStringList stringList = data.split(" ");
-	if (stringList[0] != "1")
+	if (stringList.length() == 4)
 	{
-		SWCommunication::GetInstance()->ReadMR500to503();
+		QString pidstatussuc = stringList[2];
+		QString pidstatusfail = stringList[3];
+
+		if (pidstatussuc == "0" && pidstatusfail == "0")
+		{
+			SWCommunication::GetInstance()->ReadMR500to503();
+		}
+		else if (pidstatussuc == "1")
+		{
+			qDebug() << "PID Run Succeed\n";
+		}
+		else
+		{
+			qDebug() << "PID Run failed\n";
+
+		}
 	}
 	else
 	{
-		int a = 1;
+		SWCommunication::GetInstance()->ReadMR500to503();
 	}
 }

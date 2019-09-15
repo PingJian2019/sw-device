@@ -41,6 +41,12 @@ SWCommunication * SWCommunication::GetInstance()
 	return m_instance;
 }
 
+void SWCommunication::StartReadRealData()
+{
+	std::thread th(std::bind(&SWCommunication::readRealDataFun, this));
+	th.detach();
+}
+
 bool SWCommunication::InitializeCommunication(QString portStr, QString baudRateStr)
 {
 	m_communication = new SerialCommunication(portStr, baudRateStr);
@@ -98,6 +104,23 @@ void SWCommunication::downlinkFun()
 
 		//std::chrono::milliseconds timespan(100);
 		//std::this_thread::sleep_for(timespan);
+	}
+}
+
+void SWCommunication::readRealDataFun()
+{
+	while (1)
+	{
+		//read load and disp
+		ReadDM0to10();
+
+		//read peak and valley
+		ReadLoadPeakValley();
+
+		ReadDispPeakValley();
+
+		std::chrono::milliseconds timespan(80);
+		std::this_thread::sleep_for(timespan);
 	}
 }
 
@@ -166,7 +189,7 @@ void SWCommunication::ReadDM0to10()
 	message.m_priority = PRIORITY_THREE;
 
 
-	char * cmd = "RDS DM0.U 6\r";
+	char * cmd = "RDS DM0.L 6\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -209,7 +232,7 @@ void SWCommunication::ReadDispPeakValley()
 	message.m_messType = MESS_READ_DISP_PEAK_VALLEY;
 	message.m_priority = PRIORITY_THREE;
 
-	char * cmd = "RDS DM168 2\r";
+	char * cmd = "RDS DM168.L 2\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -223,7 +246,7 @@ void SWCommunication::ReadLoadPeakValley()
 	message.m_messType = MESS_READ_LOAD_PEAK_VALLEY;
 	message.m_priority = PRIORITY_THREE;
 
-	char * cmd = "RDS DM122 2\r";
+	char * cmd = "RDS DM122.L 2\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -237,7 +260,7 @@ void SWCommunication::ReadDMSection1()
 	message.m_messType = MESS_READ_DMSECTION1;
 	//message.m_priority = PRIORITY_THREE;
 
-	char * cmd = "RDS DM100 13\r";
+	char * cmd = "RDS DM100.L 13\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -251,7 +274,7 @@ void SWCommunication::ReadDMSection2()
 	message.m_messType = MESS_READ_DMSECTION2;
 	//message.m_priority = PRIORITY_THREE;
 
-	char * cmd = "RDS DM150 11\r";
+	char * cmd = "RDS DM150.L 11\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -265,7 +288,21 @@ void SWCommunication::ReadDMSection3()
 	message.m_messType = MESS_READ_DMSECTION3;
 	//message.m_priority = PRIORITY_THREE;
 
-	char * cmd = "RDS DM200 3\r";
+	char * cmd = "RDS DM200.L 3\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::ReadMR300to303()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_READ_MR_300TO303;
+	//message.m_priority = PRIORITY_THREE;
+
+	char * cmd = "RDS MR300 4\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -279,6 +316,19 @@ void SWCommunication::WritePIDRun()
 	message.m_messType = MESS_WRITE_PID_RUN;
 
 	char * cmd = "WR MR0 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WritePIDRestore()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRTIE_PID_RESTORE;
+
+	char * cmd = "WR MR0 0\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -507,12 +557,25 @@ void SWCommunication::WriteSwitchModel()
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::WriteTestStartStop()
+void SWCommunication::WriteTestStart()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_TEST_START_STOP;
+	message.m_messType = MESS_WRITE_TEST_START;
 
 	char * cmd = "WR MR301 1\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteTestStop()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_TEST_STOP;
+
+	char * cmd = "WR MR301 0\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -523,7 +586,7 @@ void SWCommunication::WriteTestStartStop()
 void SWCommunication::WriteClearError()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_TEST_START_STOP;
+	//message.m_messType = MESS_WRITE_TEST_START_STOP;
 
 	char * cmd = "WR MR302 1\r";
 	int cmdLen = strlen(cmd);
@@ -546,13 +609,26 @@ void SWCommunication::WriteServiceOn()
 	SendDownlinnkMessage(message);
 }
 
+void SWCommunication::WriteServiceOff()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_SERIVCE_OFF;
+
+	char * cmd = "WR MR303 0\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
 void SWCommunication::WriteDispAlarmLimits(std::string uplimit, std::string lowlimit)
 {
 	DownlinkMessage message;
 	message.m_messType = MESS_WRITE_DISP_ALARM_LIMITS;
 
 	std::string cmd;
-	cmd = "WRS DM110.S 2 ";
+	cmd = "WRS DM110.L 2 ";
 	cmd += uplimit;
 	cmd += " ";
 	cmd += lowlimit;
@@ -571,7 +647,7 @@ void SWCommunication::WriteLoadAlarmLimits(std::string uplimit, std::string lowl
 	message.m_messType = MESS_WRITE_LOAD_ALARM_LIMITS;
 
 	std::string cmd;
-	cmd = "WRS DM154.S 2 ";
+	cmd = "WRS DM154.L 2 ";
 	cmd += uplimit;
 	cmd += " ";
 	cmd += lowlimit;
@@ -590,7 +666,7 @@ void SWCommunication::WriteDispLimits(std::string uplimit, std::string lowlimit)
 	message.m_messType = MESS_WRITE_DISP_LIMITS;
 
 	std::string cmd;
-	cmd = "WRS DM150.S 2 ";
+	cmd = "WRS DM150.L 2 ";
 	cmd += uplimit;
 	cmd += " ";
 	cmd += lowlimit;
@@ -609,7 +685,7 @@ void SWCommunication::WriteLoadLimits(std::string uplimit, std::string lowlimit)
 	message.m_messType = MESS_WRITE_LOAD_LIMITS;
 
 	std::string cmd;
-	cmd = "WRS DM106.S 2 ";
+	cmd = "WRS DM106.L 2 ";
 	cmd += uplimit;
 	cmd += " ";
 	cmd += lowlimit;
@@ -628,7 +704,7 @@ void SWCommunication::WritePreDispParas(std::string dispValue, std::string speed
 	message.m_messType = MESS_WRITE_PREDISP_PARAS;
 
 	std::string cmd;
-	cmd = "WRS DM164.S 2 ";
+	cmd = "WRS DM164.L 2 ";
 	cmd += dispValue;
 	cmd += " ";
 	cmd += speedValue;
@@ -647,7 +723,7 @@ void SWCommunication::WritePreLoadParas(std::string loadValue, std::string speed
 	message.m_messType = MESS_WRITE_PRELOAD_PARAS;
 
 	std::string cmd;
-	cmd = "WRS DM118.S 2 ";
+	cmd = "WRS DM118.L 2 ";
 	cmd += loadValue;
 	cmd += " ";
 	cmd += speedValue;
@@ -666,7 +742,7 @@ void SWCommunication::WriteDispFreqAndCount(std::string freq, std::string count)
 	message.m_messType = MESS_WRITE_DISP_FREQ_COUNT;
 
 	std::string cmd;
-	cmd = "WRS DM158.S 2 ";
+	cmd = "WRS DM158.L 2 ";
 	cmd += freq;
 	cmd += " ";
 	cmd += count;
@@ -685,7 +761,7 @@ void SWCommunication::WriteLoadFreqAndCount(std::string freq, std::string count)
 	message.m_messType = MESS_WRITE_LOAD_FREQ_COUNT;
 
 	std::string cmd;
-	cmd = "WRS DM114.S 2 ";
+	cmd = "WRS DM114.L 2 ";
 	cmd += freq;
 	cmd += " ";
 	cmd += count;
@@ -704,7 +780,7 @@ void SWCommunication::WriteWaveCompensation(std::string comp, std::string inputF
 	message.m_messType = MESS_WRITE_WAVEFORM_COMPENSATION;
 
 	std::string cmd;
-	cmd = "WRS DM202.S 2 ";
+	cmd = "WRS DM202.L 2 ";
 	cmd += comp;
 	cmd += " ";
 	cmd += inputFilter;
@@ -723,7 +799,7 @@ void SWCommunication::WriteJogSpeed(std::string speed)
 	message.m_messType = MESS_WRITE_JOG_SPEED;
 
 	std::string cmd;
-	cmd = "WRS DM162.S 1 ";
+	cmd = "WRS DM162.L 1 ";
 	cmd += speed;
 	cmd += "\r";
 
@@ -740,7 +816,7 @@ void SWCommunication::WriteLoadSensorAlign(std::string kValue, std::string bValu
 	message.m_messType = MESS_WRITE_LOADSENSOR_ALIGN;
 
 	std::string cmd;
-	cmd = "WRS DM100.S 2 ";
+	cmd = "WRS DM100.L 2 ";
 	cmd += kValue;
 	cmd += " ";
 	cmd += bValue;

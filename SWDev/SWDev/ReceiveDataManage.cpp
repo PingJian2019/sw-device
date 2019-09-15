@@ -45,6 +45,11 @@ void ReceiveDataManage::ReceiveData(MessageType type, std::string data)
 		emit SigRecDMSection3(type, data.c_str());
 		break;
 
+		//read MR
+	case MESS_READ_MR_300TO303:
+		emit SigRecMR300to303(type, data.c_str());
+		break;
+
 		//calibration
 	case MESS_WRITE_LOADSENSOR_ALIGN:
 		emit SigRecLoadSensorCalibration(type, data.c_str());
@@ -75,6 +80,9 @@ void ReceiveDataManage::ReceiveData(MessageType type, std::string data)
 	case MESS_WRITE_PID_RUN:
 		emit SigPIDRun(type, data.c_str());
 		break;
+	case MESS_WRTIE_PID_RESTORE:
+		emit SigPIDRestore(type, data.c_str());
+		break;
 
 		//MR 5002503
 	case MESS_READ_MR_500T0503:
@@ -87,10 +95,12 @@ void ReceiveDataManage::ReceiveData(MessageType type, std::string data)
 		break;
 
 		//start server 
-	case MESS_WRITE_TEST_START_STOP:
+	case MESS_WRITE_TEST_START:
+	case MESS_WRITE_TEST_STOP:
 		emit SigStartStop(type, data.c_str());
 		break;
 	case MESS_WRITE_SERIVCE_ON:
+	case MESS_WRITE_SERIVCE_OFF:
 		emit SigServerOnOff(type, data.c_str());
 		break;
 

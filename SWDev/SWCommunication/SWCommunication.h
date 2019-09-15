@@ -26,6 +26,7 @@ public:
 	static SWCommunication * GetInstance();
 
 	void SetIReceiveData(IReceiveData * iReceiveData);
+	void StartReadRealData();
 
 	void SendDownlinnkMessage(const DownlinkMessage & message);
 	bool InitializeCommunication(QString portStr, QString baudRateStr);
@@ -45,7 +46,11 @@ public:
 	void ReadDMSection2();
 	void ReadDMSection3();
 
+	void ReadMR300to303();
+	
+
 	void WritePIDRun();
+	void WritePIDRestore();
 
 	void WriteLoadClear0();
 	void WriteDispClear0();
@@ -72,9 +77,12 @@ public:
 	void WritePreDispLoad();
 
 	void WriteSwitchModel();
-	void WriteTestStartStop();
+	void WriteTestStart();
+	void WriteTestStop();
+
 	void WriteClearError();
 	void WriteServiceOn();
+	void WriteServiceOff();
 
 	void WriteDispAlarmLimits(std::string uplimit, std::string lowlimit);
 	void WriteLoadAlarmLimits(std::string uplimit, std::string lowlimit);
@@ -113,6 +121,7 @@ public:
 private:
 	void downlinkFun();
 	void UplinkFun();
+	void readRealDataFun();
 
 	void ConvertIntToStr(int iValue, char * buff, int & buffLen);
 

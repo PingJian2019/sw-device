@@ -74,6 +74,8 @@ private slots:
 	void OnRecStartStop(int type, QString data);
 	void OnServerOnOff(int type, QString data);
 
+	void OnRecStatus(int type, QString data);
+
 private:
 	Ui::TestSetupForm ui;
 

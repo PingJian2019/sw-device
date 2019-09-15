@@ -43,7 +43,6 @@ void TestSatusGroupView::CreateConnection()
 
 	connect(m_receiveData, SIGNAL(SigRecDMSection1(int, QString)), this, SLOT(OnRecDispAlarmLimitis(int, QString)));
 	connect(m_receiveData, SIGNAL(SigRecDMSection2(int, QString)), this, SLOT(OnRecLoadAlarmLimitis(int, QString)));
-
 }
 
 void TestSatusGroupView::InitTable()
@@ -63,7 +62,7 @@ void TestSatusGroupView::InitTable()
 void TestSatusGroupView::InitTableData()
 {
 	QTableWidgetItem * item = NULL;
-	ui.tableWidget->setItem(0, COLUMNCHANNEL, new QTableWidgetItem("D Model"));
+	ui.tableWidget->setItem(0, COLUMNCHANNEL, new QTableWidgetItem("L Model"));
 	item = ui.tableWidget->item(0, COLUMNCHANNEL);
 	item->setTextColor(QColor(0, 0, 255));
 	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -130,7 +129,8 @@ void TestSatusGroupView::OnModelChanged(int index)
 void TestSatusGroupView::OnUpdateTotalCountValue(QString value)
 {
 	QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNTCC);
-	item->setText(value);
+	float fvalue = value.toFloat();
+	item->setText(QString::number(fvalue));
 }
 
 void TestSatusGroupView::OnRecCurrentCount(int type, QString data)
@@ -142,8 +142,9 @@ void TestSatusGroupView::OnRecCurrentCount(int type, QString data)
 		if (stringList.length() >= 6)
 		{
 			QString strCount = stringList[5];
+			float fCount = strCount.toFloat();
 			QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNRCC);
-			item->setText(strCount);
+			item->setText(QString::number(fCount));
 		}
 	}
 	else if (m_model == MODE_LOAD)
@@ -151,8 +152,9 @@ void TestSatusGroupView::OnRecCurrentCount(int type, QString data)
 		if (stringList.length() >= 3)
 		{
 			QString strCount = stringList[2];
+			float fCount = strCount.toFloat();
 			QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNRCC);
-			item->setText(strCount);
+			item->setText(QString::number(fCount));
 		}
 	}
 	else{}
@@ -167,8 +169,9 @@ void TestSatusGroupView::OnRecDModelTotalCount(int type, QString data)
 		if (stringList.length() >= 6)
 		{
 			QString strCount = stringList[5];
+			float fCount = strCount.toFloat();
 			QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNTCC);
-			item->setText(strCount);
+			item->setText(QString::number(fCount));
 		}
 	}
 }
@@ -181,8 +184,9 @@ void TestSatusGroupView::OnRecLModelTotalCount(int type, QString data)
 		if (stringList.length() >= 9)
 		{
 			QString strCount = stringList[8];
+			float fCount = strCount.toFloat();
 			QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNTCC);
-			item->setText(strCount);
+			item->setText(QString::number(fCount));
 		}
 	}
 }

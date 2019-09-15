@@ -6,7 +6,7 @@
 
 #include <QTimer>
 
-#define TIMEFREQ	40
+#define TIMEFREQ	100
 
 class AdjustMoverDlgView : public QDialog
 {
@@ -27,7 +27,9 @@ public:
 
 private slots:
 	void OnHomeBtnClicked();
-	void OnJogSpeedBtnClicked();
+	void OnJog1SpeedBtnClicked();
+	void OnJog2SpeedBtnClicked();
+	void OnJog3SpeedBtnClicked();
 
 	void OnJog1BtnUpClicked();
 	void OnJog1BtnDownClicked();
@@ -57,6 +59,8 @@ private slots:
 	void OnRecSetHome(int type, QString data);
 
 	void OnRecJogMove(int type, QString data);
+
+	void OnRecCurrentPostion(int tyep, QString data);
 
 
 signals:

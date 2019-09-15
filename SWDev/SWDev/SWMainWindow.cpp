@@ -68,6 +68,7 @@ void SWMainWindow::CreateConnection()
 void SWMainWindow::ReadDMData()
 {
 	SWCommunication * pInstance = SWCommunication::GetInstance();
+	pInstance->ReadMR300to303();
 	pInstance->ReadDMSection1();
 	pInstance->ReadDMSection2();
 	pInstance->ReadDMSection3();
@@ -79,6 +80,8 @@ void SWMainWindow::OnRecStartCom(int type, QString data)
 	{
 		m_isInitDev = true;
 		ReadDMData();
+
+		SWCommunication::GetInstance()->StartReadRealData();
 	}
 	else
 	{

@@ -11,7 +11,7 @@ AdjustMoverDlgView::AdjustMoverDlgView(QWidget * parent,ReceiveDataManage * rece
 	ui.setupUi(this);
 
 	move(300, 80);
-	setFixedSize(430, 300);
+	setFixedSize(430, 410);
 	setWindowFlags((this->windowFlags()) & ~Qt::WindowContextHelpButtonHint);
 
 	CreateConnection();
@@ -20,7 +20,10 @@ AdjustMoverDlgView::AdjustMoverDlgView(QWidget * parent,ReceiveDataManage * rece
 void AdjustMoverDlgView::CreateConnection()
 {
 	connect(ui.m_homeBtn, SIGNAL(clicked()), this, SLOT(OnHomeBtnClicked()));
-	connect(ui.m_speedBtn, SIGNAL(clicked()), this, SLOT(OnJogSpeedBtnClicked()));
+	connect(ui.m_speedJog1Btn, SIGNAL(clicked()), this, SLOT(OnJog1SpeedBtnClicked()));
+	connect(ui.m_speedJog2Btn, SIGNAL(clicked()), this, SLOT(OnJog2SpeedBtnClicked()));
+	connect(ui.m_speedJog3Btn, SIGNAL(clicked()), this, SLOT(OnJog3SpeedBtnClicked()));
+
 
 	connect(ui.m_jog1UpBtn, SIGNAL(pressed()), this, SLOT(OnJog1BtnUpPressed()));
 	connect(ui.m_jog2UpBtn, SIGNAL(pressed()), this, SLOT(OnJog2BtnUpPressed()));
@@ -46,6 +49,8 @@ void AdjustMoverDlgView::CreateConnection()
 	connect(m_receiveData, SIGNAL(SigClearDisp(int, QString)), this, SLOT(OnRecSetHome(int, QString)));
 
 	connect(m_receiveData, SIGNAL(SigJogMove(int, QString)), this, SLOT(OnRecJogMove(int, QString)));
+
+	connect(m_receiveData, SIGNAL(SigRTLoadAndDispValue(int, QString)), this, SLOT(OnRecCurrentPostion(int, QString)));
 
 }
 
@@ -76,6 +81,20 @@ void AdjustMoverDlgView::OnTimeOut()
 	}
 }
 
+void AdjustMoverDlgView::OnRecCurrentPostion(int tyep, QString data)
+{
+	QStringList stringList = data.split(" ");
+	if (stringList.length() >=4 )
+	{
+		QString strPostion = stringList[3];
+		float fPostion = strPostion.toFloat();
+		fPostion = fPostion / 100;
+
+		strPostion = QString::number(fPostion);
+		ui.m_positionLabel->setText(strPostion);
+	}
+}
+
 void AdjustMoverDlgView::OnRecReadJogSpeed(int type,QString data)
 {
 	QStringList stringList = data.split(" ");
@@ -87,7 +106,7 @@ void AdjustMoverDlgView::OnRecReadJogSpeed(int type,QString data)
 	fjogSpeed = fjogSpeed / 100;
 	jogSpeed = QString::number(fjogSpeed);
 
-	ui.m_speedLineEdit->setText(jogSpeed);
+	ui.m_speed1LineEdit->setText(jogSpeed);
 }
 
 void AdjustMoverDlgView::OnRecSetJogSpeed(int type, QString data)
@@ -143,15 +162,25 @@ void AdjustMoverDlgView::OnHomeBtnClicked()
 	SWCommunication::GetInstance()->WriteDispClear0();
 }
 
-void AdjustMoverDlgView::OnJogSpeedBtnClicked()
+void AdjustMoverDlgView::OnJog1SpeedBtnClicked()
 {
-	QString jogSpeed = ui.m_speedLineEdit->text();
+	QString jogSpeed = ui.m_speed1LineEdit->text();
 	float fjogSpeed = jogSpeed.toFloat();
 	fjogSpeed = fjogSpeed / 100;
 
 	jogSpeed = QString::number(fjogSpeed);
 
 	SWCommunication::GetInstance()->WriteJogSpeed(jogSpeed.toStdString());
+}
+
+void AdjustMoverDlgView::OnJog2SpeedBtnClicked()
+{
+
+}
+
+void AdjustMoverDlgView::OnJog3SpeedBtnClicked()
+{
+
 }
 
 void AdjustMoverDlgView::OnJog1BtnUpClicked()

@@ -32,6 +32,8 @@ signals:
 	void SigRecDMSection2(int type, QString data);
 	void SigRecDMSection3(int type, QString data);
 
+	void SigRecMR300to303(int type, QString data);
+
 	//calibration
 	void SigRecLoadSensorCalibration(int type, QString data);
 
@@ -48,6 +50,7 @@ signals:
 
 	//pid
 	void SigPIDRun(int type, QString data);
+	void SigPIDRestore(int type, QString data);
 	void SigMR5002503(int type, QString data);
 
 	//wave form compensation

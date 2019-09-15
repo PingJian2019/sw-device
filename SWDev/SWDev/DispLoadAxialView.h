@@ -13,7 +13,13 @@ private:
 	void CreateConnection();
 
 private slots:
+	void OnResetDispBtnClicked();
+	void OnResetLoadBtnClicked();
+
+
 	void OnRecRTDispAndLoadValue(int type, QString data);
+	void OnRecClearDisp(int type, QString data);
+	void OnRecClearLoad(int type, QString data);
 
 
 private:

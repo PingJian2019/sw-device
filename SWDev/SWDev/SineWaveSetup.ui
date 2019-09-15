@@ -120,12 +120,12 @@
             </property>
             <item>
              <property name="text">
-              <string>Disp</string>
+              <string>Load</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>Load</string>
+              <string>Disp</string>
              </property>
             </item>
            </widget>

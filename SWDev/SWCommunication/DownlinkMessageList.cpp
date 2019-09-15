@@ -1,4 +1,5 @@
 #include "DownlinkMessageList.h"
+#include <QDebug>
 
 DownlinkMessageList::DownlinkMessageList()
 {
@@ -10,6 +11,9 @@ void DownlinkMessageList::AddDownLinkMessage(const DownlinkMessage & message)
 	std::unique_lock<std::mutex> lock(m_mutex);
 	// Now, add the message into the list. 
 	// For messages with priority 1~3, search from head to tail
+
+	int messageSize = m_downlistList.size();
+	qDebug() << "messageSize: " << messageSize << "endl";
 	std::list<DownlinkMessage>::iterator i = m_downlistList.begin();
 	while ((i != m_downlistList.end()) && (*i).m_priority <= message.m_priority)
 		i++;
@@ -87,9 +91,9 @@ void DownlinkMessageList::GetNextMessage(DownlinkMessage & message)
 		//std::lock_guard<std::mutex> lock(m_mutex);
 		std::unique_lock<std::mutex> lock(m_mutex);
 		m_condVar.wait(lock);
-		
 	}
 	
+	std::unique_lock<std::mutex> lock(m_mutex);
 	message = *m_downlistList.begin();
 	m_downlistList.pop_front();
 	

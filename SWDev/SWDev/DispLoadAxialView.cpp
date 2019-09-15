@@ -1,4 +1,5 @@
 #include"DispLoadAxialView.h"
+#include"SWCommunication.h"
 
 DispLoadAxialView::DispLoadAxialView(QWidget * parent, ReceiveDataManage * receiveData)
 	: QMainWindow(parent)
@@ -17,7 +18,35 @@ DispLoadAxialView::DispLoadAxialView(QWidget * parent, ReceiveDataManage * recei
 
 void DispLoadAxialView::CreateConnection()
 {
+	connect(ui.m_resetDispBtn, SIGNAL(clicked()), this, SLOT(OnResetDispBtnClicked()));
+	connect(ui.m_resetLoadBtn, SIGNAL(clicked()), this, SLOT(OnResetLoadBtnClicked()));
+
 	connect(m_receiveData, SIGNAL(SigRTLoadAndDispValue(int, QString)), this, SLOT(OnRecRTDispAndLoadValue(int, QString)));
+
+	connect(m_receiveData, SIGNAL(SigClearDisp(int, QString)), this, SLOT(OnRecClearDisp(int, QString)));
+	connect(m_receiveData, SIGNAL(SigClearLoad(int, QString)), this, SLOT(OnRecClearLoad(int, QString)));
+
+}
+
+void DispLoadAxialView::OnRecClearDisp(int type, QString data)
+{
+	ui.m_resetDispBtn->setEnabled(true);
+
+	if (data == "OK\r\n")
+	{
+
+	}
+}
+
+void DispLoadAxialView::OnRecClearLoad(int type, QString data)
+{
+	ui.m_resetLoadBtn->setEnabled(true);
+
+	if (data == "OK\r\n")
+	{
+
+	}
+
 }
 
 void DispLoadAxialView::OnRecRTDispAndLoadValue(int type, QString data)
@@ -38,4 +67,17 @@ void DispLoadAxialView::OnRecRTDispAndLoadValue(int type, QString data)
 		strDispValue = QString::number(fDispValue);
 		ui.m_dispValue->setText(strDispValue);
 	}
+}
+
+void DispLoadAxialView::OnResetDispBtnClicked()
+{
+	SWCommunication::GetInstance()->WriteDispClear0();
+	ui.m_resetDispBtn->setEnabled(false);
+}
+
+void DispLoadAxialView::OnResetLoadBtnClicked()
+{
+	SWCommunication::GetInstance()->WriteLoadClear0();
+
+	ui.m_resetLoadBtn->setEnabled(false);
 }

@@ -42,7 +42,11 @@ private slots :
 	void OnRecSetLoadModeFreqCount(int type, QString data);
 
 	void OnRecPidRun(int type, QString data);
+	void OnRecPidRestore(int type, QString data);
 	void OnRecPidResult(int type, QString data);
+	void OnRecCurrentModel(int type, QString data);
+
+	void OnRecCurrentCount(int type, QString data);
 
 
 

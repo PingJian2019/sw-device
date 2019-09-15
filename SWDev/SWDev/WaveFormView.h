@@ -19,18 +19,27 @@ public:
 protected:
 	virtual void paintEvent(QPaintEvent *event);
 
+signals:
+	void SigUpdateArea();
+
 private slots:
 	void OnTimerUpdate();
 
+	void OnRecWaveData(int type, QString data);
+
+	void OnUpdateDrawArea();
+
 private:
+	void CreateConnection();
 	void Init();
 	void Paint();
 	void CreatData();
 
-
 	void DrawCoorDinateSys();
 	void DrawXYScale();
 	void DrawGrad();
+
+	void DrawWaveArea();
 
 private:
 	Ui::WaveForm ui;
@@ -57,6 +66,25 @@ private:
 
 	float           m_xScale;
 	float			m_yScale;
+
+
+
+	float			m_loadMaxValue;
+	float			m_loadMinValue;
+
+	float			m_dispMaxValue;
+	float			m_dispMinValue;
+
+	float           m_dispBuffer[200];
+	float           m_loadBuffer[200];
+
+	int				m_lastdrawchannelIndex;
+	int				m_currentdrawchannelIndex;
+
+	int             m_currentChannelIndex;
+
+	int				m_olddrawIndex;
+	int				m_newdrawIndex;
 
 	int				buffer[BUFFERSIZE];
 	int				buffer2[BUFFERSIZE];

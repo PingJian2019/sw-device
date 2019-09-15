@@ -1,5 +1,6 @@
 #include "WaveFormView.h"
 #include <time.h>
+#include <QDebug>
 
 #define IMAGEWIDTH 1000
 #define IMAGEHEIGHT 350
@@ -23,7 +24,7 @@
 #define SCALELINELEN 4
 #define SCALEVALUELEN 20
 
-#define NUMPOINTTODRAW BUFFERSIZE
+#define NUMPOINTTODRAW 200
 
 
 WaveFormView::WaveFormView(QWidget * parent, ReceiveDataManage * receiveData)
@@ -39,6 +40,16 @@ WaveFormView::WaveFormView(QWidget * parent, ReceiveDataManage * receiveData)
 	, maxvalue2(0)
 	, minvalue2(1000)
 	, m_receiveData(receiveData)
+	, m_lastdrawchannelIndex(-1)
+	, m_currentdrawchannelIndex(-1)
+	, m_currentChannelIndex(-1)
+	, m_olddrawIndex(-1)
+	, m_newdrawIndex(-1)
+	, m_loadMaxValue(0.0f)
+	, m_loadMinValue(100000.0f)
+	, m_dispMaxValue(0.0f)
+	, m_dispMinValue(100000.0f)
+
 {
 	ui.setupUi(this);
 
@@ -51,6 +62,108 @@ WaveFormView::WaveFormView(QWidget * parent, ReceiveDataManage * receiveData)
 		//(~Qt::WindowMaximizeButtonHint) & (~Qt::WindowMinimizeButtonHint));
 
 	Init();
+
+	CreateConnection();
+}
+
+void WaveFormView::CreateConnection()
+{
+	connect(m_receiveData, SIGNAL(SigRTLoadAndDispValue(int, QString)), this, SLOT(OnRecWaveData(int, QString)));
+
+	connect(this, SIGNAL(SigUpdateArea()), this, SLOT(OnUpdateDrawArea()));
+}
+
+void WaveFormView::OnRecWaveData(int type, QString data)
+{
+	QStringList stringList = data.split(" ");
+	if (stringList.length() < 4) return;
+
+	++m_currentChannelIndex;
+	if (m_currentChannelIndex == 200)
+	{
+		m_currentChannelIndex = 0;
+	}
+
+	QString strLoadValue = stringList[0];
+	float fLoadVaue = strLoadValue.toFloat();
+	fLoadVaue = fLoadVaue / 100;
+	m_loadBuffer[m_currentChannelIndex] = fLoadVaue;
+
+	if (fLoadVaue > m_loadMaxValue)	m_loadMaxValue = fLoadVaue;
+	if (fLoadVaue < m_loadMinValue) m_loadMinValue = fLoadVaue;
+
+
+	QString strDispVlaue = stringList[3];
+	float fDispVlaue = strDispVlaue.toFloat();
+	fDispVlaue = fDispVlaue / 100;
+	m_dispBuffer[m_currentChannelIndex] = fDispVlaue;
+
+	if (fDispVlaue > m_dispMaxValue) m_dispMaxValue = fDispVlaue;
+	if (fDispVlaue < m_dispMinValue) m_dispMinValue = fDispVlaue;
+
+	//m_yScale = m_height / fDispVlaue;
+
+	emit SigUpdateArea();
+
+	qDebug() << "fLoadVaue: " << fLoadVaue << " fDispVlaue: " << fDispVlaue << "\n";
+}
+
+void WaveFormView::OnUpdateDrawArea()
+{
+	DrawWaveArea();
+}
+
+void WaveFormView::DrawWaveArea()
+{
+	if (m_currentChannelIndex == -1)return;
+	if (m_currentChannelIndex == 0)
+	{
+		QColor backColor = qRgb(255, 255, 255);
+		image.fill(backColor);
+
+		DrawCoorDinateSys();
+		DrawXYScale();
+		DrawGrad();
+	}
+
+	painter->save();
+
+	QPen pen, penPoint;
+
+	pen.setColor(Qt::blue);
+	pen.setWidth(1);
+
+	penPoint.setColor(Qt::green);
+	penPoint.setWidth(1);
+	
+	if (m_currentChannelIndex == 0)
+	{
+		painter->setPen(pen);
+		painter->drawPoint(m_originX, m_originY - m_loadBuffer[m_currentChannelIndex] * m_yScale);
+
+		painter->setPen(penPoint);
+		painter->drawPoint(m_originX, m_originY - m_dispBuffer[m_currentChannelIndex] * m_yScale);
+
+	}
+	else
+	{
+		painter->setPen(pen);
+		for (int i = 1; i < m_currentChannelIndex; i++)
+		{
+			painter->drawLine(m_originX + m_xScale * (i - 1), m_originY - m_loadBuffer[i - 1] * m_yScale,
+				m_originX + m_xScale * (i), m_originY - m_loadBuffer[i] * m_yScale);
+		}
+
+		painter->setPen(penPoint);
+		for (int i = 1; i < m_currentChannelIndex; i++)
+		{
+			painter->drawLine(m_originX + m_xScale * (i - 1), m_originY - m_dispBuffer[i - 1] * m_yScale,
+				m_originX + m_xScale * (i), m_originY - m_dispBuffer[i] * m_yScale);
+		}
+	}
+
+	painter->restore();
+	update();
 }
 
 void WaveFormView::Init()
@@ -69,7 +182,9 @@ void WaveFormView::Init()
 	m_originY = COORDINATEORIGINY;
 
 	m_xScale = (double)m_width / NUMPOINTTODRAW;
-	m_yScale = (double)m_height * 0.4 / (maxvalue - minvalue);
+	//m_yScale = (double)m_height * 0.4  / (maxvalue - minvalue);
+	m_yScale = m_height / 2;
+	//m_yScale = (double)m_height / maxvalue;
 
 	painter = new QPainter(&image);
 	painter->setRenderHint(QPainter::Antialiasing, true);
@@ -79,12 +194,16 @@ void WaveFormView::Init()
 	DrawXYScale();
 	DrawGrad();
 
-	connect(&timer, SIGNAL(timeout()), this, SLOT(OnTimerUpdate()));
-	timer.start(40);                  
+	//connect(&timer, SIGNAL(timeout()), this, SLOT(OnTimerUpdate()));
+	//timer.start(40);                  
 }
 
 void WaveFormView::OnTimerUpdate()
 {
+	if (m_currentChannelIndex == -1)return;
+
+	
+#if 0
 	index++;
 	m_lastDrawIndex++;
 	if (index == BUFFERSIZE)
@@ -124,6 +243,7 @@ void WaveFormView::OnTimerUpdate()
 
 		painter->restore();
 	}
+#endif
 
 	update();
 }

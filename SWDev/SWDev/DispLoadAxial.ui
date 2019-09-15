@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>376</width>
-    <height>192</height>
+    <height>194</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,7 +59,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="m_resetDispBtn">
         <property name="minimumSize">
          <size>
           <width>120</width>
@@ -145,7 +145,7 @@ background-color: rgb(255, 255, 255);</string>
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="m_resetLoadBtn">
         <property name="minimumSize">
          <size>
           <width>120</width>

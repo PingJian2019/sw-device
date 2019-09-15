@@ -71,6 +71,9 @@ void TestSetupView::CreateConnection()
 	connect(m_receiveData, SIGNAL(SigStartStop(int, QString)), this, SLOT(OnRecStartStop(int, QString)));
 	connect(m_receiveData, SIGNAL(SigServerOnOff(int, QString)), this, SLOT(OnServerOnOff(int, QString)));
 
+	connect(m_receiveData, SIGNAL(SigRecMR300to303(int, QString)), this, SLOT(OnRecStatus(int, QString)));
+
+
 }
 
 void TestSetupView::OnRecSetPreDispValue(QString data)
@@ -109,6 +112,38 @@ void TestSetupView::OnRecPreLoadValue(int type, QString data)
 	QString preloadValue = QString::number(stringList[9].toInt());
 	QString showloadValue = "PreSet Load:" + preloadValue + "N";
 	ui.m_presetTwoBtn->setText(showloadValue);
+}
+
+void TestSetupView::OnRecStatus(int type, QString data)
+{
+	QStringList stringList = data.split(" ");
+	if (stringList.length() == 4)
+	{
+		QString runState = stringList[1];
+		if (runState == "1")
+		{
+			ui.m_startBtn->setText("Stop");
+		}
+		else
+		{
+			ui.m_startBtn->setText("Start");
+		}
+
+		QString serviceState = stringList[3];
+		if (serviceState == "1")
+		{
+			ui.m_serverBtn->setText("Server Off");
+		}
+		else
+		{
+			ui.m_serverBtn->setText("Server On");
+		}
+
+	}
+	else
+	{
+		SWCommunication::GetInstance()->ReadMR500to503();
+	}
 }
 
 void TestSetupView::OnRecStartStop(int type, QString data)
@@ -275,11 +310,13 @@ void TestSetupView::OnAdjustMoverBtnClicked()
 
 void TestSetupView::OnPresetOneBtnClicked()
 {
+	SWCommunication::GetInstance()->WritePreDispLoad();
 	//m_presetPropDlgView.exec();
 }
 
 void TestSetupView::OnPresetTwoBtnClicked()
 {
+	SWCommunication::GetInstance()->WritePreLoadLoad();
 	//m_presetPropDlgView.exec();
 }
 
@@ -291,14 +328,30 @@ void TestSetupView::OnWaveFormSetupBtnClicked()
 void TestSetupView::OnStartStopBtnClicked()
 {
 	ui.m_startBtn->setEnabled(false);
-	SWCommunication::GetInstance()->WriteTestStartStop();
+	QString text = ui.m_startBtn->text();
+	if (text == "Start")
+	{
+		SWCommunication::GetInstance()->WriteTestStart();
 
+	}
+	else
+	{
+		SWCommunication::GetInstance()->WriteTestStop();
+	}
 }
 
 void TestSetupView::OnServerBtnClicked()
 {
 	ui.m_serverBtn->setEnabled(false);
-	SWCommunication::GetInstance()->WriteServiceOn();
+	QString text = ui.m_serverBtn->text();
+	if (text == "Server On")
+	{
+		SWCommunication::GetInstance()->WriteServiceOn();
+	}
+	else
+	{
+		SWCommunication::GetInstance()->WriteServiceOff();
+	}
 }
 
 void TestSetupView::OnWaveFormCompenBtnClicked()
