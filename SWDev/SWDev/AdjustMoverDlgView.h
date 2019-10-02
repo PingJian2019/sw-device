@@ -62,7 +62,6 @@ private slots:
 
 	void OnRecCurrentPostion(int tyep, QString data);
 
-
 signals:
 
 private:

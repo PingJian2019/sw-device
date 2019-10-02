@@ -11,8 +11,8 @@ LimitsDlgView::LimitsDlgView(QWidget * parent, ReceiveDataManage * data)
 {
 	ui.setupUi(this);
 	
-	move(300, 80);
-	setFixedSize(600, 285);
+	move(300, 100);
+	setFixedSize(600, 190);
 	/*setWindowFlags((this->windowFlags()) & (~Qt::WindowCloseButtonHint) &
 		(~Qt::WindowMaximizeButtonHint) & (~Qt::WindowMinimizeButtonHint) &
 		~Qt::WindowContextHelpButtonHint);*/
@@ -42,10 +42,10 @@ void LimitsDlgView::InitTable()
 		ui.tableWidget->setColumnWidth(i, 190);
 	}
 
-	ui.tableWidget->setRowCount(4);
-	for (int i = 0; i < 4; i++)
+	ui.tableWidget->setRowCount(2);
+	for (int i = 0; i < 2; i++)
 	{
-		ui.tableWidget->setRowHeight(i, 50);
+		ui.tableWidget->setRowHeight(i, 52);
 	}
 
 	QStringList headerList;
@@ -59,25 +59,15 @@ void LimitsDlgView::InitTable()
 void LimitsDlgView::InitTableData()
 {
 	QTableWidgetItem * item = NULL;
-	item = new QTableWidgetItem(tr("Disp(D Model)"));
+	item = new QTableWidgetItem(tr("Disp"));
 	item->setFlags(item->flags() & ~Qt::ItemIsEditable & ~Qt::ItemIsSelectable);
 	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	ui.tableWidget->setItem(0, 0, item);
 
-	item = new QTableWidgetItem(tr("Load(D Model)"));
+	item = new QTableWidgetItem(tr("Load"));
 	item->setFlags(item->flags() & ~Qt::ItemIsEditable & ~Qt::ItemIsSelectable);
 	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	ui.tableWidget->setItem(1, 0, item);
-
-	item = new QTableWidgetItem(tr("Disp(L Model)"));
-	item->setFlags(item->flags() & ~Qt::ItemIsEditable & ~Qt::ItemIsSelectable);
-	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-	ui.tableWidget->setItem(2, 0, item);
-
-	item = new QTableWidgetItem(tr("Load(L Model)"));
-	item->setFlags(item->flags() & ~Qt::ItemIsEditable & ~Qt::ItemIsSelectable);
-	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-	ui.tableWidget->setItem(3, 0, item);
 
 	//minimum
 	QColor color(0, 0, 255);
@@ -91,17 +81,6 @@ void LimitsDlgView::InitTableData()
 	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	ui.tableWidget->setItem(1, 1, item);
 
-	item = new QTableWidgetItem(tr("-10.000"));
-	item->setTextColor(color);
-	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-	ui.tableWidget->setItem(2, 1, item);
-
-	item = new QTableWidgetItem(tr("-7500.0"));
-	item->setTextColor(color);
-	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-	ui.tableWidget->setItem(3, 1, item);
-
-
 	//maximum
 	item = new QTableWidgetItem(tr("20.000"));
 	item->setTextColor(color);
@@ -112,16 +91,6 @@ void LimitsDlgView::InitTableData()
 	item->setTextColor(color);
 	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	ui.tableWidget->setItem(1, 2, item);
-
-	item = new QTableWidgetItem(tr("10.000"));
-	item->setTextColor(color);
-	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-	ui.tableWidget->setItem(2, 2, item);
-
-	item = new QTableWidgetItem("7500.0");
-	item->setTextColor(color);
-	item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-	ui.tableWidget->setItem(3, 2, item);
 }
 
 void LimitsDlgView::OnOKBtnClicked()
@@ -169,40 +138,44 @@ void LimitsDlgView::OnRecGetDispAlramLimitis(int type, QString data)
 
 	if (stringList.length() < 7)
 	{
-		return;
+		SWCommunication::GetInstance()->ReadDMSection1();
 	}
+	else
+	{
+		QString dispupAlarm = stringList[5];
+		float idispupAlarm = dispupAlarm.toFloat();
+		idispupAlarm = idispupAlarm / 100;
+		dispupAlarm = QString::number(idispupAlarm);
+		ui.tableWidget->item(0, 2)->setText(dispupAlarm);
 
-	QString dispupAlarm = stringList[5];
-	float idispupAlarm = dispupAlarm.toFloat();
-	idispupAlarm = idispupAlarm / 100;
-	dispupAlarm = QString::number(idispupAlarm);
-	ui.tableWidget->item(0, 2)->setText(dispupAlarm);
-	
-	QString displowAlarm = stringList[6];
-	float idisplowAlarm = dispupAlarm.toFloat();
-	idisplowAlarm = idisplowAlarm / 100;
-	displowAlarm = QString::number(idisplowAlarm);
-	ui.tableWidget->item(0, 1)->setText(displowAlarm);
+		QString displowAlarm = stringList[6];
+		float idisplowAlarm = displowAlarm.toFloat();
+		idisplowAlarm = idisplowAlarm / 100;
+		displowAlarm = QString::number(idisplowAlarm);
+		ui.tableWidget->item(0, 1)->setText(displowAlarm);
+	}
 }
 
 void LimitsDlgView::OnRecGetLoadAlramLimitis(int type, QString data)
 {
 	QStringList stringList = data.split(" ");
 
-	if (stringList.length() < 3)
+	if (stringList.length() < 4)
 	{
-		return;
+		SWCommunication::GetInstance()->ReadDMSection2();
 	}
+	else
+	{
+		QString loadpupAlarm = stringList[2];
+		float iloadupAlarm = loadpupAlarm.toFloat();
+		iloadupAlarm = iloadupAlarm / 100;
+		loadpupAlarm = QString::number(iloadupAlarm);
+		ui.tableWidget->item(1, 2)->setText(loadpupAlarm);
 
-	QString loadpupAlarm = stringList[2];
-	float iloadupAlarm = loadpupAlarm.toFloat();
-	iloadupAlarm = iloadupAlarm / 100;
-	loadpupAlarm = QString::number(iloadupAlarm);
-	ui.tableWidget->item(1, 2)->setText(loadpupAlarm);
-
-	QString loadplowAlarm = stringList[2];
-	float iloadlowAlarm = loadplowAlarm.toFloat();
-	iloadlowAlarm = iloadlowAlarm / 100;
-	loadplowAlarm = QString::number(iloadlowAlarm);
-	ui.tableWidget->item(1, 1)->setText(loadplowAlarm);
+		QString loadplowAlarm = stringList[3];
+		float iloadlowAlarm = loadplowAlarm.toFloat();
+		iloadlowAlarm = iloadlowAlarm / 100;
+		loadplowAlarm = QString::number(iloadlowAlarm);
+		ui.tableWidget->item(1, 1)->setText(loadplowAlarm);
+	}
 }

@@ -6,29 +6,40 @@ SWCommunication::SWCommunication()
 	: m_communication(NULL)
 	, m_receiveData(NULL)
 	, m_strReceiveMessage("")
+	, m_isStop(false)
 {
 	memset(m_buffer, 0, 1024);
-
-	unsigned char rdheader[3] = { 0x52,0x44,0x20 };
-	memcpy(m_rdheader, rdheader, 3);
-	m_rdheadrLen = 3;
-
-	unsigned char rdsheader[4] = { 0x52,0x44,0x53,0x20 };
-	memcpy(m_rdsHeader, rdsheader, 4);
-	m_rdsHeaderLen = 4;
-
-	unsigned char wdheader[4] = "WR ";
-	memcpy(m_wdheader, wdheader, 3);
-	m_wdheaderLen = 3;
-
-	unsigned char wdsheader[5] = "WRS ";
-	memcpy(m_wdsheader, wdsheader, 4);
-	m_wdsheaderLen = 4;
-
 }
 
 SWCommunication::~SWCommunication()
 {
+	m_isStop = true;
+	m_waitResConVar.notify_one();
+	m_downlinkList.QuitMessageList();
+
+	m_addmessageThread.join();
+	m_upLinkThread.join();
+	m_downLinkThread.join();
+
+	if (m_communication)
+	{
+		delete m_communication;
+		m_communication = NULL;
+	}
+}
+
+void SWCommunication::ReleaseInstance()
+{
+	if (m_instance != NULL)
+	{
+		delete m_instance;
+		m_instance = NULL;
+	}
+}
+
+void SWCommunication::Stop()
+{
+
 }
 
 SWCommunication * SWCommunication::GetInstance()
@@ -44,7 +55,8 @@ SWCommunication * SWCommunication::GetInstance()
 void SWCommunication::StartReadRealData()
 {
 	std::thread th(std::bind(&SWCommunication::readRealDataFun, this));
-	th.detach();
+	//th.detach();
+	m_addmessageThread = std::move(th);
 }
 
 bool SWCommunication::InitializeCommunication(QString portStr, QString baudRateStr)
@@ -56,11 +68,13 @@ bool SWCommunication::InitializeCommunication(QString portStr, QString baudRateS
 	{
 		//start downlink thread
 		std::thread th(std::bind(&SWCommunication::downlinkFun, this));
-		th.detach();
+		//th.detach();
+		m_downLinkThread = std::move(th);
 
 		//start uplink thread
 		std::thread th1(std::bind(&SWCommunication::UplinkFun, this));
-		th1.detach();
+		//th1.detach();
+		m_upLinkThread = std::move(th1);
 		result = true;
 	}
 	else
@@ -78,7 +92,7 @@ void SWCommunication::SendDownlinnkMessage(const DownlinkMessage & message)
 
 void SWCommunication::downlinkFun()
 {
-	while (1)
+	while (!m_isStop)
 	{
 		DownlinkMessage message;
 		m_downlinkList.GetNextMessage(message);
@@ -109,17 +123,27 @@ void SWCommunication::downlinkFun()
 
 void SWCommunication::readRealDataFun()
 {
-	while (1)
+	while (!m_isStop)
 	{
+		static int count = 0;
 		//read load and disp
-		ReadDM0to10();
+		ReadDM0to18();
+
+		count++;
+		if (count == 60)
+		{
+			ReadAlarmInfo();
+			count = 0;
+		}
 
 		//read peak and valley
-		ReadLoadPeakValley();
+		//ReadLoadPeakValley();
 
-		ReadDispPeakValley();
+		//ReadDispPeakValley();
 
-		std::chrono::milliseconds timespan(80);
+		if (m_isStop)return;
+
+		std::chrono::milliseconds timespan(50);
 		std::this_thread::sleep_for(timespan);
 	}
 }
@@ -131,7 +155,7 @@ void SWCommunication::SetIReceiveData(IReceiveData * iReceiveData)
 
 void SWCommunication::UplinkFun()
 {
-	while (1)
+	while (!m_isStop)
 	{
 		unsigned char buffer[1024] = { 0 };
 		int bufferLen = 0;
@@ -182,14 +206,14 @@ void SWCommunication::StopCommnuication()
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::ReadDM0to10()
+void SWCommunication::ReadDM0to18()
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_READ_DM_0TO10;
+	message.m_messType = MESS_READ_DM_0TO18;
 	message.m_priority = PRIORITY_THREE;
 
 
-	char * cmd = "RDS DM0.L 6\r";
+	char * cmd = "RDS DM0.L 10\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -202,7 +226,6 @@ void SWCommunication::ReadMR500to503()
 	DownlinkMessage message;
 	message.m_messType = MESS_READ_MR_500T0503;
 	message.m_priority = PRIORITY_THREE;
-
 
 	char * cmd = "RDS MR500 4\r";
 	int cmdLen = strlen(cmd);
@@ -274,7 +297,7 @@ void SWCommunication::ReadDMSection2()
 	message.m_messType = MESS_READ_DMSECTION2;
 	//message.m_priority = PRIORITY_THREE;
 
-	char * cmd = "RDS DM150.L 11\r";
+	char * cmd = "RDS DM150.L 13\r";
 	int cmdLen = strlen(cmd);
 
 	message.m_downlinkDataLen = cmdLen;
@@ -586,7 +609,7 @@ void SWCommunication::WriteTestStop()
 void SWCommunication::WriteClearError()
 {
 	DownlinkMessage message;
-	//message.m_messType = MESS_WRITE_TEST_START_STOP;
+	message.m_messType = MESS_WRITE_CLEAR_ERROR;
 
 	char * cmd = "WR MR302 1\r";
 	int cmdLen = strlen(cmd);
@@ -595,6 +618,21 @@ void SWCommunication::WriteClearError()
 	memcpy(message.m_downlinkData, cmd, cmdLen);
 	SendDownlinnkMessage(message);
 }
+
+void SWCommunication::WriteRestoreError()
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_RESTORE_ERROR;
+
+	char * cmd = "WR MR302 0\r";
+	int cmdLen = strlen(cmd);
+
+	message.m_downlinkDataLen = cmdLen;
+	memcpy(message.m_downlinkData, cmd, cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+
 
 void SWCommunication::WriteServiceOn()
 {
@@ -793,13 +831,47 @@ void SWCommunication::WriteWaveCompensation(std::string comp, std::string inputF
 	SendDownlinnkMessage(message);
 }
 
-void SWCommunication::WriteJogSpeed(std::string speed)
+void SWCommunication::WriteJog1Speed(std::string speed)
 {
 	DownlinkMessage message;
-	message.m_messType = MESS_WRITE_JOG_SPEED;
+	message.m_messType = MESS_WRITE_JOG1_SPEED;
 
 	std::string cmd;
 	cmd = "WRS DM162.L 1 ";
+	cmd += speed;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog2Speed(std::string speed)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG2_SPEED;
+
+	std::string cmd;
+	cmd = "WRS DM172.L 1 ";
+	cmd += speed;
+	cmd += "\r";
+
+	int cmdLen = cmd.length();
+	message.m_downlinkDataLen = cmdLen;
+
+	memcpy(message.m_downlinkData, cmd.c_str(), cmdLen);
+	SendDownlinnkMessage(message);
+}
+
+void SWCommunication::WriteJog3Speed(std::string speed)
+{
+	DownlinkMessage message;
+	message.m_messType = MESS_WRITE_JOG3_SPEED;
+
+	std::string cmd;
+	cmd = "WRS DM174.L 1 ";
 	cmd += speed;
 	cmd += "\r";
 
@@ -840,338 +912,10 @@ void SWCommunication::ClearCPUError()
 
 }
 
-
 void SWCommunication::ConvertIntToStr(int iValue, char * buff, int & buffLen)
 {
 	char tempBuf[16] = { 0 };
 	sprintf(tempBuf, "%d", iValue);
 	strcpy(buff, tempBuf);
 	buffLen = strlen(tempBuf);
-}
-
-void SWCommunication::RDMRData(int MR)
-{
-	DownlinkMessage message;
-	int index = 0;
-	memcpy(message.m_downlinkData + index, m_rdheader, m_rdheadrLen);
-	index += m_rdheadrLen;
-	unsigned char softType[] = { 'M','R' };
-	memcpy(message.m_downlinkData + index, softType, 2);
-	index += 2;
-
-
-	char strMR[16] = { 0 };
-	int MRlen = 0;
-	ConvertIntToStr(MR, strMR, MRlen);
-	memcpy(message.m_downlinkData + index, strMR, MRlen);
-	index += MRlen;
-
-	unsigned char dataformat[] = { '.','U' };
-	int dataformatLen = sizeof(dataformat);
-	memcpy(message.m_downlinkData + index, dataformat, dataformatLen);
-	index += dataformatLen;
-
-	unsigned char enddata[] = { 0x0D };
-	memcpy(message.m_downlinkData + index, enddata, 1);
-	index += 1;
-
-	message.m_downlinkDataLen = index + 1;
-
-	SendDownlinnkMessage(message);
-
-}
-
-void SWCommunication::RDSMRData(int MRStart, int num)
-{
-	DownlinkMessage message;
-	int index = 0;
-	memcpy(message.m_downlinkData + index, m_rdsHeader, m_rdsHeaderLen);
-	index += m_rdsHeaderLen;
-	unsigned char softType[] = { 'M','R' };
-	memcpy(message.m_downlinkData + index, softType, 2);
-	index += 2;
-
-	char strMRStart[16] = { 0 };
-	int mrStartLen = 0;
-	ConvertIntToStr(MRStart, strMRStart, mrStartLen);
-	memcpy(message.m_downlinkData + index, strMRStart, mrStartLen);
-	index += mrStartLen;
-
-	unsigned char dataformat[] = { '.','U' };
-	int dataformatLen = sizeof(dataformat);
-	memcpy(message.m_downlinkData + index, dataformat, dataformatLen);
-	index += dataformatLen;
-
-	unsigned char spiltData[] = { 0x20 };
-	memcpy(message.m_downlinkData + index, spiltData, 1);
-	index += 1;
-
-	char strnum[8] = { 0 };
-	sprintf(strnum, "%d", num);
-	int numlen = strlen(strnum);
-	memcpy(message.m_downlinkData + index, strnum, numlen);
-	index += numlen;
-
-	unsigned char enddata[] = { 0x0D };
-	memcpy(message.m_downlinkData + index, enddata, 1);
-
-	message.m_downlinkDataLen = index + 1;
-
-	SendDownlinnkMessage(message);
-}
-
-void SWCommunication::RDDMData(int DR)
-{
-	DownlinkMessage message;
-	int index = 0;
-	memcpy(message.m_downlinkData + index, m_rdheader, m_rdheadrLen);
-	index += m_rdheadrLen;
-	unsigned char softType[] = { 'D','M' };
-	memcpy(message.m_downlinkData + index, softType, 2);
-	index += 2;
-
-	char strDR[16] = { 0 };
-	int drLen = 0;
-	ConvertIntToStr(DR, strDR, drLen);
-	memcpy(message.m_downlinkData + index, strDR, drLen);
-	index += drLen;
-
-	unsigned char dataformat[] = { '.','U' };
-	int dataformatLen = sizeof(dataformat);
-	memcpy(message.m_downlinkData + index, dataformat, dataformatLen);
-	index += dataformatLen;
-
-	unsigned char enddata[] = { 0x0D };
-	memcpy(message.m_downlinkData + index, enddata, 1);
-	
-	message.m_downlinkDataLen = index + 1;
-
-	SendDownlinnkMessage(message);
-
-}
-
-void SWCommunication::RDSDMData(int DRStart, int num)
-{
-	DownlinkMessage message;
-	int index = 0;
-	memcpy(message.m_downlinkData + index, m_rdsHeader, m_rdsHeaderLen);
-	index += m_rdsHeaderLen;
-	unsigned char softType[] = { 'D','M' };
-	memcpy(message.m_downlinkData + index, softType, 2);
-	index += 2;
-
-	char strDRStart[16] = { 0 };
-	int drLen = 0;
-	ConvertIntToStr(DRStart, strDRStart, drLen);
-	memcpy(message.m_downlinkData + index, strDRStart, drLen);
-	index += drLen;
-
-	unsigned char dataformat[] = { '.','U' };
-	int dataformatLen = sizeof(dataformat);
-	memcpy(message.m_downlinkData + index, dataformat, dataformatLen);
-	index += dataformatLen;
-
-	unsigned char spiltData[] = { 0x20 };
-	memcpy(message.m_downlinkData + index, spiltData, 1);
-	index += 1;
-
-	char strnum[8] = { 0 };
-	sprintf(strnum, "%d", num);
-	int numlen = strlen(strnum);
-	memcpy(message.m_downlinkData + index, strnum, numlen);
-	index += numlen;
-
-	unsigned char enddata[] = { 0x0D };
-	memcpy(message.m_downlinkData + index, enddata, 1);
-	index += 1;
-
-	message.m_downlinkDataLen = index + 1;
-
-	SendDownlinnkMessage(message);
-}
-
-void SWCommunication::WRMRData(int MR, char * data)
-{
-	DownlinkMessage message;
-	int index = 0;
-	memcpy(message.m_downlinkData + index, m_wdheader, m_wdheaderLen);
-	index += m_wdheaderLen;
-
-	unsigned char softType[] = { 'M','R' };
-	memcpy(message.m_downlinkData + index, softType, 2);
-	index += 2;
-
-	char strMR[16] = { 0 };
-	int mrLen = 0;
-	ConvertIntToStr(MR, strMR, mrLen);
-	memcpy(message.m_downlinkData + index, strMR, mrLen);
-	index += mrLen;
-
-	unsigned char dataformat[] = { '.','U' };
-	int dataformatLen = sizeof(dataformat);
-	memcpy(message.m_downlinkData + index, dataformat, dataformatLen);
-	index += dataformatLen;
-
-	unsigned char spiltData[] = { 0x20 };
-	memcpy(message.m_downlinkData + index, spiltData, 1);
-	index += 1;
-
-	int datalen = strlen(data);
-	memcpy(message.m_downlinkData + index, data, datalen);
-	index += datalen;
-
-	unsigned char enddata[] = { 0x0D };
-	memcpy(message.m_downlinkData + index, enddata, 1);
-	index += 1;
-
-	message.m_downlinkDataLen = index + 1;
-
-	SendDownlinnkMessage(message);
-}
-
-void SWCommunication::WRSMRData(int MR, std::vector<char *> dataList)
-{
-	DownlinkMessage message;
-	int index = 0;
-	memcpy(message.m_downlinkData + index, m_wdheader, m_wdheaderLen);
-	index += m_wdheaderLen;
-
-	unsigned char softType[] = { 'M','R' };
-	memcpy(message.m_downlinkData + index, softType, 2);
-	index += 2;
-
-	char strMR[16] = { 0 };
-	int mrLen = 0;
-	ConvertIntToStr(MR, strMR, mrLen);
-	memcpy(message.m_downlinkData + index, strMR, mrLen);
-	index += mrLen;
-
-	unsigned char dataformat[] = { '.','U' };
-	int dataformatLen = sizeof(dataformat);
-	memcpy(message.m_downlinkData + index, dataformat, dataformatLen);
-	index += dataformatLen;
-
-	unsigned char spiltData[] = { 0x20 };
-	memcpy(message.m_downlinkData + index, spiltData, 1);
-	index += 1;
-
-	int num = dataList.size();
-	if (num == 0)return;
-	char strNum[16] = { 0 };
-	int numLen = 0;
-	ConvertIntToStr(num, strNum, numLen);
-	memcpy(message.m_downlinkData + index, strNum, numLen);
-	index += numLen;
-
-	for each (char * var in dataList)
-	{
-		unsigned char spiltData[] = { 0x20 };
-		memcpy(message.m_downlinkData + index, spiltData, 1);
-		index += 1;
-
-		int len = strlen(var);
-		memcpy(message.m_downlinkData + index, var, len);
-		index += len;
-	}
-
-	unsigned char enddata[] = { 0x0D };
-	memcpy(message.m_downlinkData + index, enddata, 1);
-	index += 1;
-
-	message.m_downlinkDataLen = index + 1;
-
-	SendDownlinnkMessage(message);
-}
-
-void SWCommunication::WRDMData(int DR, char * data)
-{
-	DownlinkMessage message;
-	int index = 0;
-	memcpy(message.m_downlinkData + index, m_wdheader, m_wdheaderLen);
-	index += m_wdheaderLen;
-
-	unsigned char softType[] = { 'D','R' };
-	memcpy(message.m_downlinkData + index, softType, 2);
-	index += 2;
-
-	char strDR[16] = { 0 };
-	int drLen = 0;
-	ConvertIntToStr(DR, strDR, drLen);
-	memcpy(message.m_downlinkData + index, strDR, drLen);
-	index += drLen;
-
-	unsigned char dataformat[] = { '.','U' };
-	int dataformatLen = sizeof(dataformat);
-	memcpy(message.m_downlinkData + index, dataformat, dataformatLen);
-	index += dataformatLen;
-
-	unsigned char spiltData[] = { 0x20 };
-	memcpy(message.m_downlinkData + index, spiltData, 1);
-	index += 1;
-
-	int datalen = strlen(data);
-	memcpy(message.m_downlinkData + index, data, datalen);
-	index += datalen;
-
-	unsigned char enddata[] = { 0x0D };
-	memcpy(message.m_downlinkData + index, enddata, 1);
-	index += 1;
-
-	message.m_downlinkDataLen = index + 1;
-
-	SendDownlinnkMessage(message);
-}
-
-void SWCommunication::WRSDMData(int DR, std::vector<char *> dataList)
-{
-	DownlinkMessage message;
-	int index = 0;
-	memcpy(message.m_downlinkData + index, m_wdheader, m_wdheaderLen);
-	index += m_wdheaderLen;
-
-	unsigned char softType[] = { 'M','R' };
-	memcpy(message.m_downlinkData + index, softType, 2);
-	index += 2;
-
-	char strDR[16] = { 0 };
-	int drLen = 0;
-	ConvertIntToStr(DR, strDR, drLen);
-	memcpy(message.m_downlinkData + index, strDR, drLen);
-	index += drLen;
-
-	unsigned char dataformat[] = { '.','U' };
-	int dataformatLen = sizeof(dataformat);
-	memcpy(message.m_downlinkData + index, dataformat, dataformatLen);
-	index += dataformatLen;
-
-	unsigned char spiltData[] = { 0x20 };
-	memcpy(message.m_downlinkData + index, spiltData, 1);
-	index += 1;
-
-	int num = dataList.size();
-	if (num == 0)return;
-	char strNum[16] = { 0 };
-	int numLen = 0;
-	ConvertIntToStr(num, strNum, numLen);
-	memcpy(message.m_downlinkData + index, strNum, numLen);
-	index += numLen;
-
-	for each (char * var in dataList)
-	{
-		unsigned char spiltData[] = { 0x20 };
-		memcpy(message.m_downlinkData + index, spiltData, 1);
-		index += 1;
-
-		int len = strlen(var);
-		memcpy(message.m_downlinkData + index, var, len);
-		index += len;
-	}
-
-	unsigned char enddata[] = { 0x0D };
-	memcpy(message.m_downlinkData + index, enddata, 1);
-	index += 1;
-
-	message.m_downlinkDataLen = index + 1;
-
-	SendDownlinnkMessage(message);
 }

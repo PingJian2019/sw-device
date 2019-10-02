@@ -29,7 +29,7 @@ void PresetPropDlgView::CreateConnection()
 
 void PresetPropDlgView::OnRecSetDispPreValue(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		QString preDispValue = ui.m_preDispValueLineEdit->text();
 		preDispValue = QString::number(preDispValue.toInt());
@@ -46,7 +46,7 @@ void PresetPropDlgView::OnRecSetDispPreValue(int type, QString data)
 
 void PresetPropDlgView::OnRecSetLoadPreValue(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		QString preLoadValue = ui.m_preLoadValueLineEdit->text();
 		preLoadValue = QString::number(preLoadValue.toInt());
@@ -65,14 +65,16 @@ void PresetPropDlgView::OnRecDispPreValue(int type, QString data)
 	QStringList stringList = data.split(" ");
 	if (stringList.length() < 9)
 	{
-		return;
+		SWCommunication::GetInstance()->ReadDMSection2();
 	}
+	else
+	{
+		QString preDisValue = QString::number(stringList[7].toInt());
+		QString preDisRate = QString::number(stringList[8].toInt());
 
-	QString preDisValue = QString::number(stringList[7].toInt());
-	QString preDisRate = QString::number(stringList[8].toInt());
-
-	ui.m_preDispValueLineEdit->setText(preDisValue);
-	ui.m_preDispRateLineEdit->setText(preDisRate);
+		ui.m_preDispValueLineEdit->setText(preDisValue);
+		ui.m_preDispRateLineEdit->setText(preDisRate);
+	}
 }
 
 void PresetPropDlgView::OnRecLoadPreValue(int type, QString data)
@@ -80,14 +82,16 @@ void PresetPropDlgView::OnRecLoadPreValue(int type, QString data)
 	QStringList stringList = data.split(" ");
 	if (stringList.length() < 11)
 	{
-		return;
+		SWCommunication::GetInstance()->ReadDMSection1();
 	}
+	else
+	{
+		QString preloadValue = QString::number(stringList[9].toInt());
+		QString preloadrate = QString::number(stringList[10].toInt());
 
-	QString preloadValue = QString::number(stringList[9].toInt());
-	QString preloadrate = QString::number(stringList[10].toInt());
-
-	ui.m_preLoadValueLineEdit->setText(preloadValue);
-	ui.m_preLoadRateLineEdit->setText(preloadrate);
+		ui.m_preLoadValueLineEdit->setText(preloadValue);
+		ui.m_preLoadRateLineEdit->setText(preloadrate);
+	}
 }
 
 void PresetPropDlgView::OnOkBtnClicked()

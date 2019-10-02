@@ -7,7 +7,7 @@ DispLoadAxialView::DispLoadAxialView(QWidget * parent, ReceiveDataManage * recei
 {
 	ui.setupUi(this);
 
-	move(1050, 250);
+	move(1050, 235);
 	setFixedSize(300, 180);
 
 	setWindowFlags((this->windowFlags()) &
@@ -32,7 +32,7 @@ void DispLoadAxialView::OnRecClearDisp(int type, QString data)
 {
 	ui.m_resetDispBtn->setEnabled(true);
 
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 
 	}
@@ -42,7 +42,7 @@ void DispLoadAxialView::OnRecClearLoad(int type, QString data)
 {
 	ui.m_resetLoadBtn->setEnabled(true);
 
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 
 	}

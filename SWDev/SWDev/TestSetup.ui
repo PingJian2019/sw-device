@@ -1380,6 +1380,7 @@ font: 10pt &quot;Arial&quot;;</string>
     </property>
     <addaction name="actionPeak_Valley"/>
     <addaction name="actionDispLoad"/>
+    <addaction name="actionTestAlarmInfo"/>
    </widget>
    <addaction name="menuCalibration"/>
    <addaction name="menuTest_Limits"/>
@@ -1446,6 +1447,11 @@ font: 10pt &quot;Arial&quot;;</string>
   <action name="actionPeekValleyData">
    <property name="text">
     <string>PeekValleyData</string>
+   </property>
+  </action>
+  <action name="actionTestAlarmInfo">
+   <property name="text">
+    <string>TestAlarmInfo</string>
    </property>
   </action>
  </widget>

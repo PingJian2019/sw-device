@@ -1,5 +1,6 @@
 #include "TestSatusGroup.h"
 #include "common_type.h"
+#include "SWCommunication.h"
 
 #define COLUMNCHANNEL 0
 #define COLUMNWAVEFORM 1
@@ -43,6 +44,9 @@ void TestSatusGroupView::CreateConnection()
 
 	connect(m_receiveData, SIGNAL(SigRecDMSection1(int, QString)), this, SLOT(OnRecDispAlarmLimitis(int, QString)));
 	connect(m_receiveData, SIGNAL(SigRecDMSection2(int, QString)), this, SLOT(OnRecLoadAlarmLimitis(int, QString)));
+
+	connect(m_receiveData, SIGNAL(SigRecDMSection3(int, QString)), this, SLOT(OnRecCompentation(int, QString)));
+
 }
 
 void TestSatusGroupView::InitTable()
@@ -173,6 +177,10 @@ void TestSatusGroupView::OnRecDModelTotalCount(int type, QString data)
 			QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNTCC);
 			item->setText(QString::number(fCount));
 		}
+		else
+		{
+			SWCommunication::GetInstance()->ReadDMSection2();
+		}
 	}
 }
 
@@ -187,6 +195,10 @@ void TestSatusGroupView::OnRecLModelTotalCount(int type, QString data)
 			float fCount = strCount.toFloat();
 			QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNTCC);
 			item->setText(QString::number(fCount));
+		}
+		else
+		{
+			SWCommunication::GetInstance()->ReadDMSection1();
 		}
 	}
 }
@@ -213,6 +225,10 @@ void TestSatusGroupView::OnRecDispAlarmLimitis(int type, QString data)
 			QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNDEF);
 			item->setText(strFinal);
 		}
+		else
+		{
+			SWCommunication::GetInstance()->ReadDMSection1();
+		}
 	}
 }
 
@@ -238,11 +254,28 @@ void TestSatusGroupView::OnRecLoadAlarmLimitis(int type, QString data)
 			QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNDEF);
 			item->setText(strFinal);
 		}
+		else
+		{
+			SWCommunication::GetInstance()->ReadDMSection2();
+		}
 	}
 }
 
 void TestSatusGroupView::OnRecCompentation(int type, QString data)
 {
-
+	QStringList stringList = data.split(" ");
+	if (stringList.length() < 3)
+	{
+		return;
+	}
+	else
+	{
+		QString strFilterComp = stringList[1];
+		float fFilterComp = strFilterComp.toFloat();
+		strFilterComp = QString::number(fFilterComp);
+	
+		QTableWidgetItem * item = ui.tableWidget->item(0, COLUMNCOMP);
+		item->setText(strFilterComp);
+	}
 }
 

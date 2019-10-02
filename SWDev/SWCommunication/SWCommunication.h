@@ -24,6 +24,7 @@ public:
 	~SWCommunication();
 
 	static SWCommunication * GetInstance();
+	void ReleaseInstance();
 
 	void SetIReceiveData(IReceiveData * iReceiveData);
 	void StartReadRealData();
@@ -35,7 +36,7 @@ public:
 	void StopCommnuication();
 	void ClearCPUError();
 
-	void ReadDM0to10();
+	void ReadDM0to18();
 	void ReadMR500to503();
 	void ReadAlarmInfo();
 
@@ -81,6 +82,7 @@ public:
 	void WriteTestStop();
 
 	void WriteClearError();
+	void WriteRestoreError();
 	void WriteServiceOn();
 	void WriteServiceOff();
 
@@ -98,25 +100,11 @@ public:
 
 	void WriteWaveCompensation(std::string comp, std::string inputFilter);
 
-	void WriteJogSpeed(std::string speed);
+	void WriteJog1Speed(std::string speed);
+	void WriteJog2Speed(std::string speed);
+	void WriteJog3Speed(std::string speed);
 
 	void WriteLoadSensorAlign(std::string kValue, std::string bValue);
-
-
-	void RDMRData(int MR);
-	void RDSMRData(int MRStart, int num);
-
-	void RDDMData(int DR);
-	void RDSDMData(int DRStart,int num);
-
-	void WRMRData(int MR, char * data);
-	void WRSMRData(int MR, std::vector<char *> dataList);
-
-	void WRDMData(int DR, char * data);
-	void WRSDMData(int DR, std::vector<char *> dataList);
-
-
-
 
 private:
 	void downlinkFun();
@@ -124,6 +112,8 @@ private:
 	void readRealDataFun();
 
 	void ConvertIntToStr(int iValue, char * buff, int & buffLen);
+
+	void Stop();
 
 
 private:
@@ -136,20 +126,13 @@ private:
 	unsigned char				m_buffer[1024];
 	int							m_bufferLen;
 
-	unsigned char				m_rdheader[3];
-	int							m_rdheadrLen;
-
-	unsigned char				m_rdsHeader[4];
-	int							m_rdsHeaderLen;
-
-	unsigned char				m_wdheader[3];
-	int							m_wdheaderLen;
-
-	unsigned char				m_wdsheader[4];
-	int							m_wdsheaderLen;
-
 	IReceiveData*				m_receiveData;
 	std::string					m_strReceiveMessage;
+
+	bool						m_isStop;
+	std::thread					m_downLinkThread;
+	std::thread					m_upLinkThread;
+	std::thread					m_addmessageThread;
 
 	static SWCommunication *	m_instance;
 };

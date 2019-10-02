@@ -17,6 +17,7 @@
 #include "StandardDataSetupDlgView.h"
 #include "PeakValleyDataSetupDlgView.h"
 #include "AlignLoadSensorDlgView.h"
+#include "AlarmInfoView.h"
 
 #include "ReceiveDataManage.h"
 
@@ -46,6 +47,7 @@ private slots:
 	void OnStandardDataAction();
 	void OnPeakValleyDataAction();
 	void OnCalibrationAction();
+	void OnTestAlarmInfoAction();
 
 	void OnLimitsBtnClicked();
 	void OnUndePeakBtnClicked();
@@ -93,6 +95,7 @@ private:
 	StandardDataSetupDlgView m_standardDataSetupDlgView;
 	PeakValleyDataSetupDlgView m_peakValleyDataSetupDlgView;
 	AligLoadSensorDlgView	m_alignLoadSensorDlgView;
+	AlarmInfoView	m_alarmInfoView;
 
 
 

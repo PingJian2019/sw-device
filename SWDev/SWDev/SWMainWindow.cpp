@@ -25,12 +25,8 @@ SWMainWindow::~SWMainWindow()
 {
 	SWCommunication * pInstance = SWCommunication::GetInstance();
 	pInstance->StopCommnuication();
-	/*while (!m_isRecEndDev)
-	{
-		Sleep(10);
-	}*/
-
-	int a = 0;
+	//Sleep(10);
+	pInstance->ReleaseInstance();
 }
 
 void SWMainWindow::Init()
@@ -72,11 +68,13 @@ void SWMainWindow::ReadDMData()
 	pInstance->ReadDMSection1();
 	pInstance->ReadDMSection2();
 	pInstance->ReadDMSection3();
+
+	pInstance->ReadAlarmInfo();
 }
 
 void SWMainWindow::OnRecStartCom(int type, QString data)
 {
-	if (data == "CC\r\n")
+	if (data == "CC")
 	{
 		m_isInitDev = true;
 		ReadDMData();

@@ -13,6 +13,7 @@ public:
 private slots:
 	void OnRecDispPeakValley(int type, QString data);
 	void OnRecLoadPeakValley(int type, QString data);
+	void OnRecDispAndLoadPeakValley(int type, QString data);
 
 private:
 	void InitTable();

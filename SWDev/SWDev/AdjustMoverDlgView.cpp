@@ -98,20 +98,47 @@ void AdjustMoverDlgView::OnRecCurrentPostion(int tyep, QString data)
 void AdjustMoverDlgView::OnRecReadJogSpeed(int type,QString data)
 {
 	QStringList stringList = data.split(" ");
-	if (stringList.length() < 7)
-		return;
+	if (stringList.length() < 13)
+	{
+		SWCommunication::GetInstance()->ReadDMSection2();
+	}
+	else
+	{
+		QString jogSpeed1 = stringList[6];
+		float fjogSpeed1 = jogSpeed1.toFloat();
+		fjogSpeed1 = fjogSpeed1 / 100;
+		jogSpeed1 = QString::number(fjogSpeed1);
+		ui.m_speed1LineEdit->setText(jogSpeed1);
 
-	QString jogSpeed = stringList[6];
-	float fjogSpeed = jogSpeed.toFloat();
-	fjogSpeed = fjogSpeed / 100;
-	jogSpeed = QString::number(fjogSpeed);
+		QString jogSpeed2 = stringList[11];
+		float fjogSpeed2 = jogSpeed2.toFloat();
+		fjogSpeed2 = fjogSpeed2 / 100;
+		jogSpeed2 = QString::number(fjogSpeed2);
+		ui.m_speed2LineEdit->setText(jogSpeed2);
 
-	ui.m_speed1LineEdit->setText(jogSpeed);
+		QString jogSpeed3 = stringList[12];
+		float fjogSpeed3 = jogSpeed3.toFloat();
+		fjogSpeed3 = fjogSpeed3 / 100;
+		jogSpeed3 = QString::number(fjogSpeed3);
+		ui.m_speed3LineEdit->setText(jogSpeed3);
+	}
 }
 
 void AdjustMoverDlgView::OnRecSetJogSpeed(int type, QString data)
 {
-	if (data == "OK\r\n")
+	switch (type)
+	{
+	case MESS_WRITE_JOG1_SPEED:
+		break;
+	case MESS_WRITE_JOG2_SPEED:
+		break;
+	case MESS_WRITE_JOG3_SPEED:
+		break;
+	default:
+		break;
+	}
+
+	if (data == "OK")
 	{
 	}
 
@@ -119,7 +146,7 @@ void AdjustMoverDlgView::OnRecSetJogSpeed(int type, QString data)
 
 void AdjustMoverDlgView::OnRecSetHome(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 	}
 }
@@ -170,17 +197,29 @@ void AdjustMoverDlgView::OnJog1SpeedBtnClicked()
 
 	jogSpeed = QString::number(fjogSpeed);
 
-	SWCommunication::GetInstance()->WriteJogSpeed(jogSpeed.toStdString());
+	SWCommunication::GetInstance()->WriteJog1Speed(jogSpeed.toStdString());
 }
 
 void AdjustMoverDlgView::OnJog2SpeedBtnClicked()
 {
+	QString jogSpeed = ui.m_speed2LineEdit->text();
+	float fjogSpeed = jogSpeed.toFloat();
+	fjogSpeed = fjogSpeed / 100;
 
+	jogSpeed = QString::number(fjogSpeed);
+
+	SWCommunication::GetInstance()->WriteJog2Speed(jogSpeed.toStdString());
 }
 
 void AdjustMoverDlgView::OnJog3SpeedBtnClicked()
 {
+	QString jogSpeed = ui.m_speed3LineEdit->text();
+	float fjogSpeed = jogSpeed.toFloat();
+	fjogSpeed = fjogSpeed / 100;
 
+	jogSpeed = QString::number(fjogSpeed);
+
+	SWCommunication::GetInstance()->WriteJog3Speed(jogSpeed.toStdString());
 }
 
 void AdjustMoverDlgView::OnJog1BtnUpClicked()

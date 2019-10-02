@@ -41,7 +41,7 @@ void WaveFormCompensationDlgView::OnSetBtnClicked()
 
 void WaveFormCompensationDlgView::OnRecWaveCompensation(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 	}
 
@@ -53,17 +53,19 @@ void WaveFormCompensationDlgView::OnRecReadWaveCompensation(int type, QString da
 	QStringList stringList = data.split(" ");
 	if (stringList.length() < 3)
 	{
-		return;
+		SWCommunication::GetInstance()->ReadDMSection3();
 	}
+	else
+	{
+		QString strFilterComp = stringList[1];
+		float fFilterComp = strFilterComp.toFloat();
+		strFilterComp = QString::number(fFilterComp);
+		ui.m_filterCompLineEdit->setText(strFilterComp);
 
-	QString strFilterComp = stringList[1];
-	float fFilterComp = strFilterComp.toFloat();
-	strFilterComp = QString::number(fFilterComp);
-	ui.m_filterCompLineEdit->setText(strFilterComp);
+		QString strInputFilter = stringList[2];
+		float fInputFilter = strInputFilter.toFloat() / 100;
+		strInputFilter = QString::number(fInputFilter);
 
-	QString strInputFilter = stringList[2];
-	float fInputFilter = strInputFilter.toFloat() / 100;
-	strInputFilter = QString::number(fInputFilter);
-
-	ui.m_inputFilterLineEdit->setText(strInputFilter);
+		ui.m_inputFilterLineEdit->setText(strInputFilter);
+	}
 }

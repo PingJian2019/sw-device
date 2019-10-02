@@ -20,9 +20,51 @@ PeakValleyView::PeakValleyView(QWidget * parent, ReceiveDataManage * receiveData
 
 void PeakValleyView::CreateConnection()
 {
-	connect(m_receiveData, SIGNAL(SigDispPeakValley(int, QString)), this, SLOT(OnRecDispPeakValley(int, QString)));
-	connect(m_receiveData, SIGNAL(SigLoadPeakValley(int, QString)), this, SLOT(OnRecLoadPeakValley(int, QString)));
+	//connect(m_receiveData, SIGNAL(SigDispPeakValley(int, QString)), this, SLOT(OnRecDispPeakValley(int, QString)));
+	//connect(m_receiveData, SIGNAL(SigLoadPeakValley(int, QString)), this, SLOT(OnRecLoadPeakValley(int, QString)));
+	
 
+	connect(m_receiveData, SIGNAL(SigRTLoadAndDispValue(int, QString)), this, SLOT(OnRecDispAndLoadPeakValley(int, QString)));
+
+}
+
+void PeakValleyView::OnRecDispAndLoadPeakValley(int type, QString data)
+{
+	QStringList stringList = data.split(" ");
+	if (stringList.length() < 10)
+	{
+		return;
+	}
+
+	QString strLoadPeakValue = stringList[6];
+	float fLoadPeakValue = strLoadPeakValue.toFloat();
+	strLoadPeakValue = QString::number(fLoadPeakValue);
+
+	QTableWidgetItem * item = ui.m_tableWidget->item(1, 1);
+	item->setText(strLoadPeakValue);
+
+
+	QString strLoadValleyValue = stringList[7];
+	float fLoadValleyValue = strLoadValleyValue.toFloat();
+	strLoadValleyValue = QString::number(fLoadValleyValue);
+
+	item = ui.m_tableWidget->item(1, 2);
+	item->setText(strLoadValleyValue);
+
+	QString strDispPeakValue = stringList[8];
+	float fDispPeakValue = strDispPeakValue.toFloat();
+	strDispPeakValue = QString::number(fDispPeakValue);
+
+	item = ui.m_tableWidget->item(0, 1);
+	item->setText(strDispPeakValue);
+
+
+	QString strDispValleyValue = stringList[9];
+	float fDispValleyValue = strDispValleyValue.toFloat();
+	strDispValleyValue = QString::number(fDispValleyValue);
+
+	item = ui.m_tableWidget->item(1, 2);
+	item->setText(strDispValleyValue);
 }
 
 void PeakValleyView::OnRecDispPeakValley(int type, QString data)

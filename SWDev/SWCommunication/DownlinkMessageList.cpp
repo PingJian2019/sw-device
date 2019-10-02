@@ -6,6 +6,11 @@ DownlinkMessageList::DownlinkMessageList()
 
 }
 
+void DownlinkMessageList::QuitMessageList()
+{
+	m_condVar.notify_one();
+}
+
 void DownlinkMessageList::AddDownLinkMessage(const DownlinkMessage & message)
 {
 	std::unique_lock<std::mutex> lock(m_mutex);
@@ -93,6 +98,8 @@ void DownlinkMessageList::GetNextMessage(DownlinkMessage & message)
 		m_condVar.wait(lock);
 	}
 	
+	if (m_downlistList.size() == 0)return;
+
 	std::unique_lock<std::mutex> lock(m_mutex);
 	message = *m_downlistList.begin();
 	m_downlistList.pop_front();

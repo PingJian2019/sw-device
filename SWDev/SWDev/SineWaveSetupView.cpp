@@ -17,7 +17,6 @@ void SineWaveSetupView::CreateConnection()
 	connect(ui.m_modelCombox, SIGNAL(currentIndexChanged(int)), this, SLOT(OnModelComboxIndexChanged(int)));
 	connect(ui.m_pidRunBtn, SIGNAL(clicked()), this, SLOT(OnPidRunBtnClicked()));
 
-
 	connect(m_receiveData, SIGNAL(SigRecDMSection1(int, QString)), this, SLOT(OnRecLoadModelParas(int, QString)));
 	connect(m_receiveData, SIGNAL(SigRecDMSection2(int, QString)), this, SLOT(OnRecDispModelParas(int, QString)));
 
@@ -33,14 +32,12 @@ void SineWaveSetupView::CreateConnection()
 	connect(m_receiveData, SIGNAL(SigMR5002503(int, QString)), this, SLOT(OnRecPidResult(int, QString)));
 	connect(m_receiveData, SIGNAL(SigRecMR300to303(int, QString)), this, SLOT(OnRecCurrentModel(int, QString)));
 	connect(m_receiveData, SIGNAL(SigRTLoadAndDispValue(int, QString)), this, SLOT(OnRecCurrentCount(int, QString)));
-
-	
 }
 
 void SineWaveSetupView::OnRecCurrentCount(int type, QString data)
 {
 	QStringList stringList = data.split(" ");
-	if (stringList.length() == 6)
+	if (stringList.length() >= 6)
 	{
 		if (m_currentModel == MODE_DISP)
 		{
@@ -65,7 +62,7 @@ void SineWaveSetupView::OnRecCurrentCount(int type, QString data)
 void SineWaveSetupView::OnRecSetDispModeLimits(int type, QString data)
 {
 	m_isRecDispLimit = true;
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		m_dispLowLimit = GetLevel1String();
 		m_dispUpLimit = GetLevel2String();
@@ -80,7 +77,7 @@ void SineWaveSetupView::OnRecSetDispModeLimits(int type, QString data)
 void SineWaveSetupView::OnRecSetLoadModeLimits(int type, QString data)
 {
 	m_isRecLoadLimit = true;
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		m_loadLowLimit = GetLevel1String();
 		m_loadUpLimit = GetLevel2String();
@@ -96,7 +93,7 @@ void SineWaveSetupView::OnRecSetDispModeFreqCount(int type, QString data)
 {
 	m_isRecDispFreqCount = true;
 
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		m_dispFreqency = GetFreqencyString();
 		m_dispCount = GetCountString();
@@ -112,7 +109,7 @@ void SineWaveSetupView::OnRecSetLoadModeFreqCount(int type, QString data)
 {
 	m_isRecLoadFreqCount = true;
 
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		m_loadFreqency = GetFreqencyString();
 		m_loadCount = GetCountString();
@@ -189,10 +186,11 @@ void SineWaveSetupView::SetModelParas()
 
 void SineWaveSetupView::OnRecModelChange(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		m_currentModel = m_tempModel;
 		UpdateParasToUI();
+		UpdatePIDUI();
 		emit SigModelChanged(m_currentModel);
 	}
 	else
@@ -208,6 +206,20 @@ void SineWaveSetupView::OnModelComboxIndexChanged(int index)
 {
 	m_tempModel = index;
 	SWCommunication::GetInstance()->WriteSwitchModel();
+}
+
+void SineWaveSetupView::UpdatePIDUI()
+{
+	if (m_currentModel == MODE_DISP)
+	{
+		ui.m_pidRunBtn->hide();
+	}
+	else if (m_currentModel == MODE_LOAD)
+	{
+		ui.m_pidRunBtn->show();
+	}
+	else
+	{ }
 }
 
 void SineWaveSetupView::UpdateParasToUI()
@@ -233,23 +245,24 @@ void SineWaveSetupView::OnRecDispModelParas(int type, QString data)
 	QStringList stringList = data.split(" ");
 	if (stringList.length() < 6)
 	{
-		return;
+		SWCommunication::GetInstance()->ReadDMSection2();
 	}
+	else
+	{
+		float dispUpLimit = stringList[0].toFloat() / 100;
+		m_dispUpLimit = QString::number(dispUpLimit);
 
-	float dispUpLimit = stringList[0].toFloat() / 100;
-	m_dispUpLimit = QString::number(dispUpLimit);
+		float displowLimit = stringList[1].toFloat() / 100;
+		m_dispLowLimit = QString::number(displowLimit);
 
-	float displowLimit = stringList[1].toFloat() / 100;
-	m_dispLowLimit = QString::number(displowLimit);
+		float dispfreqency = stringList[4].toFloat() / 100;
+		m_dispFreqency = QString::number(dispfreqency);
 
-	float dispfreqency = stringList[4].toFloat() / 100;
-	m_dispFreqency = QString::number(dispfreqency);
+		int idispCount = stringList[5].toInt();
+		m_dispCount = QString::number(idispCount);
 
-	int idispCount = stringList[5].toInt();
-	m_dispCount = QString::number(idispCount);
-
-	UpdateParasToUI();
-
+		UpdateParasToUI();
+	}
 }
 
 void SineWaveSetupView::OnRecLoadModelParas(int type, QString data)
@@ -257,22 +270,24 @@ void SineWaveSetupView::OnRecLoadModelParas(int type, QString data)
 	QStringList stringList = data.split(" ");
 	if (stringList.length() < 9)
 	{
-		return;
+		SWCommunication::GetInstance()->ReadDMSection1();
 	}
+	else
+	{
+		float floadUpLimit = stringList[3].toFloat() / 100;
+		m_loadUpLimit = QString::number(floadUpLimit);
 
-	float floadUpLimit = stringList[3].toFloat() / 100;
-	m_loadUpLimit = QString::number(floadUpLimit);
+		float floadlowLimit = stringList[4].toFloat() / 100;
+		m_loadLowLimit = QString::number(floadlowLimit);
 
-	float floadlowLimit = stringList[4].toFloat() / 100;
-	m_loadLowLimit = QString::number(floadlowLimit);
+		float floadfreqency = stringList[7].toFloat() / 100;
+		m_loadFreqency = QString::number(floadfreqency);
 
-	float floadfreqency = stringList[7].toFloat() / 100;
-	m_loadFreqency = QString::number(floadfreqency);
+		int iloadCount = stringList[8].toInt();
+		m_loadCount = QString::number(iloadCount);
 
-	int iloadCount = stringList[8].toInt();
-	m_loadCount = QString::number(iloadCount);
-
-	UpdateParasToUI();
+		UpdateParasToUI();
+	}
 }
 
 void SineWaveSetupView::OnPidRunBtnClicked()
@@ -283,7 +298,7 @@ void SineWaveSetupView::OnPidRunBtnClicked()
 
 void SineWaveSetupView::OnRecPidRun(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		SWCommunication::GetInstance()->WritePIDRestore();
 		SWCommunication::GetInstance()->ReadMR500to503();
@@ -294,7 +309,7 @@ void SineWaveSetupView::OnRecPidRun(int type, QString data)
 
 void SineWaveSetupView::OnRecPidRestore(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		//SWCommunication::GetInstance()->ReadMR500to503();
 	}
@@ -316,6 +331,7 @@ void SineWaveSetupView::OnRecCurrentModel(int type, QString data)
 		ui.m_modelCombox->setCurrentIndex(m_currentModel);
 		connect(ui.m_modelCombox, SIGNAL(currentIndexChanged(int)), this, SLOT(OnModelComboxIndexChanged(int)));
 
+		UpdatePIDUI();
 		//ui.m_modelCombox->setCurrentIndex(m_currentModel);
 		emit SigModelChanged(m_currentModel);
 	}

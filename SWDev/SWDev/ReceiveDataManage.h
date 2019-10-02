@@ -82,5 +82,12 @@ signals:
 	void SigDispPeakValley(int type, QString data);
 	void SigLoadPeakValley(int type, QString data);
 
+	//test alarm info
+	void SigTestAlarmInfo(int type, QString data);
+
+	//clear and restore error
+	void SigClearError(int type, QString data);
+	void SigRestoreError(int type, QString data);
+
 private:
 };

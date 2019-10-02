@@ -340,7 +340,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="m_speedLineEdit_3">
+         <widget class="QLineEdit" name="m_speed2LineEdit">
           <property name="minimumSize">
            <size>
             <width>100</width>
@@ -439,7 +439,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="m_speedLineEdit_4">
+         <widget class="QLineEdit" name="m_speed3LineEdit">
           <property name="minimumSize">
            <size>
             <width>100</width>

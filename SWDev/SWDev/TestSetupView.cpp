@@ -16,6 +16,7 @@ TestSetupView::TestSetupView(QWidget * parent, ReceiveDataManage * receiveData)
 	, m_waveFormCompenDlgView(this,receiveData)
 	, m_standardDataSetupDlgView(this)
 	, m_alignLoadSensorDlgView(this, receiveData)
+	, m_alarmInfoView(this,receiveData)
 	, m_receiveData(receiveData)
 {
 	ui.setupUi(this);
@@ -43,6 +44,8 @@ void TestSetupView::CreateConnection()
 	connect(ui.actionStandardData, SIGNAL(triggered()), this, SLOT(OnStandardDataAction()));
 	connect(ui.actionPeekValleyData, SIGNAL(triggered()), this, SLOT(OnPeakValleyDataAction()));
 	connect(ui.ActionClaibration, SIGNAL(triggered()), this, SLOT(OnCalibrationAction()));
+	connect(ui.actionTestAlarmInfo, SIGNAL(triggered()), this, SLOT(OnTestAlarmInfoAction()));
+
 
 	connect(ui.m_limitsBtn, SIGNAL(clicked()), this, SLOT(OnLimitsBtnClicked()));
 	connect(ui.m_adjustMoverBtn, SIGNAL(clicked()), this, SLOT(OnAdjustMoverBtnClicked()));
@@ -148,7 +151,7 @@ void TestSetupView::OnRecStatus(int type, QString data)
 
 void TestSetupView::OnRecStartStop(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		QString strText = ui.m_startBtn->text();
 		if (strText == "Start")
@@ -169,7 +172,7 @@ void TestSetupView::OnRecStartStop(int type, QString data)
 
 void TestSetupView::OnServerOnOff(int type, QString data)
 {
-	if (data == "OK\r\n")
+	if (data == "OK")
 	{
 		QString strText = ui.m_serverBtn->text();
 		if (strText == "Server On")
@@ -194,6 +197,7 @@ void TestSetupView::InitView()
 	m_waveFormView.show();
 	m_peakValleyView.show();
 	m_dispLoadAxialView.show();
+	m_alarmInfoView.show();
 }
 
 void TestSetupView::InitInstallEvent()
@@ -372,4 +376,9 @@ void TestSetupView::OnPeakValleyDataSetupBtnClicked()
 void TestSetupView::OnCalibrationAction()
 {
 	m_alignLoadSensorDlgView.exec();
+}
+
+void TestSetupView::OnTestAlarmInfoAction()
+{
+	m_alarmInfoView.show();
 }

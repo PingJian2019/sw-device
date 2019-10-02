@@ -10,6 +10,8 @@ class DownlinkMessageList
 public:
 	DownlinkMessageList();
 
+	void QuitMessageList();
+
 	void AddDownLinkMessage(const DownlinkMessage & message);
 	void GetNextMessage(DownlinkMessage & message);
 

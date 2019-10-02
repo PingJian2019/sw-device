@@ -20,6 +20,8 @@ private:
 
 	void UpdateParasToUI();
 
+	void UpdatePIDUI();
+
 	QString GetLevel1String();
 	QString GetLevel2String();
 	QString GetFreqencyString();
@@ -47,8 +49,6 @@ private slots :
 	void OnRecCurrentModel(int type, QString data);
 
 	void OnRecCurrentCount(int type, QString data);
-
-
 
 signals:
 	void SigModelChanged(int index);
