@@ -87,6 +87,9 @@
     <ClCompile Include="AlarmInfoView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Directory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="SWMainWindow.h">
@@ -201,6 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UnderPeakDlgView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Directory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

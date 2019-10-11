@@ -116,6 +116,7 @@
     <ClCompile Include="AdjustMoverDlgView.cpp" />
     <ClCompile Include="AlarmInfoView.cpp" />
     <ClCompile Include="AlignLoadSensorDlgView.cpp" />
+    <ClCompile Include="Directory.cpp" />
     <ClCompile Include="DispLoadAxialView.cpp" />
     <ClCompile Include="LimitsDlgView.cpp" />
     <ClCompile Include="main.cpp" />
@@ -205,6 +206,7 @@
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
     </QtMoc>
+    <ClInclude Include="Directory.h" />
     <ClInclude Include="UnderPeakDlgView.h" />
     <QtMoc Include="WaveFormCompensationDlgView.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>
