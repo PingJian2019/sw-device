@@ -3,6 +3,7 @@
 PeakValleyView::PeakValleyView(QWidget * parent, ReceiveDataManage * receiveData)
 	: QMainWindow(parent)
 	, m_receiveData(receiveData)
+	, m_lastTimeStamp(0)
 {
 	ui.setupUi(this);
 
@@ -16,7 +17,15 @@ PeakValleyView::PeakValleyView(QWidget * parent, ReceiveDataManage * receiveData
 	InitTableData();
 
 	CreateConnection();
+
+	m_log.StartLog();
 }
+
+PeakValleyView::~PeakValleyView()
+{
+	m_log.Stop();
+}
+
 
 void PeakValleyView::CreateConnection()
 {
@@ -28,6 +37,12 @@ void PeakValleyView::CreateConnection()
 
 }
 
+long long int PeakValleyView::GetCurrentTimeStamp()
+{
+	QDateTime currentTime = QDateTime::currentDateTime();
+	return currentTime.toMSecsSinceEpoch();
+}
+
 void PeakValleyView::OnRecDispAndLoadPeakValley(int type, QString data)
 {
 	QStringList stringList = data.split(" ");
@@ -36,6 +51,33 @@ void PeakValleyView::OnRecDispAndLoadPeakValley(int type, QString data)
 		return;
 	}
 
+	float difftime;
+
+	long long int currentTimeStamp = GetCurrentTimeStamp();
+	if (m_lastTimeStamp == 0)
+	{
+		difftime = 0;
+		m_lastTimeStamp = currentTimeStamp;
+	}
+	else
+	{
+		difftime = (currentTimeStamp - m_lastTimeStamp) / 1000.0;
+		m_lastTimeStamp = currentTimeStamp;
+	}
+
+	QString strLog;
+	strLog = QString::number(difftime) + ",";
+
+	QString strLoadValue = stringList[0];
+	float fLoadVaue = strLoadValue.toFloat();
+	fLoadVaue = fLoadVaue / 100;
+	strLoadValue = QString::number(fLoadVaue);
+
+	QString strDispVlaue = stringList[3];
+	float fDispVlaue = strDispVlaue.toFloat();
+	fDispVlaue = fDispVlaue / 100;
+	strDispVlaue = QString::number(fDispVlaue);
+	
 	QString strLoadPeakValue = stringList[6];
 	float fLoadPeakValue = strLoadPeakValue.toFloat();
 	strLoadPeakValue = QString::number(fLoadPeakValue);
@@ -65,6 +107,22 @@ void PeakValleyView::OnRecDispAndLoadPeakValley(int type, QString data)
 
 	item = ui.m_tableWidget->item(1, 2);
 	item->setText(strDispValleyValue);
+
+	strLog += strDispVlaue;
+	strLog += ",";
+	strLog += strLoadValue;
+	strLog += ",";
+	strLog += strDispPeakValue;
+	strLog += ",";
+	strLog += strDispValleyValue;
+	strLog += ",";
+	strLog += strLoadPeakValue;
+	strLog += ",";
+	strLog += strLoadValleyValue;
+	strLog += "\n";
+
+	m_log.LogString(strLog.toStdString());
+
 }
 
 void PeakValleyView::OnRecDispPeakValley(int type, QString data)

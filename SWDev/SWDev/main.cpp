@@ -2,6 +2,7 @@
 #include <QtWidgets/QApplication>
 
 #include "Directory.h"
+#include "Log.h"
 
 int main(int argc, char *argv[])
 {
@@ -9,6 +10,8 @@ int main(int argc, char *argv[])
 	SWMainWindow w;
 	w.showMaximized();
 	w.Init();
+
+	Log log;
 
 	QString currentPath = Directory::GetLatestRecordDir();
 

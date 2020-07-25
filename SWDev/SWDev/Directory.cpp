@@ -63,6 +63,14 @@ QString Directory::GetLatestRecordDir()
 	}
 }
 
+QString Directory::GetLatestFileName()
+{
+	QString strDir = GetLatestRecordDir() + "/";
+	QDateTime currentDateTime = QDateTime::currentDateTime();
+	QString fileNamePrefix = currentDateTime.toString("yyyyMMddhhmmss");
+	return strDir + fileNamePrefix + ".csv";
+}
+
 bool Directory::CreateDir(QString dirpath)
 {
 	bool isExist = false;

@@ -119,6 +119,7 @@
     <ClCompile Include="Directory.cpp" />
     <ClCompile Include="DispLoadAxialView.cpp" />
     <ClCompile Include="LimitsDlgView.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PeakValleyDataSetupDlgView.cpp" />
     <ClCompile Include="PeakValleyView.cpp" />
@@ -207,6 +208,7 @@
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
     </QtMoc>
     <ClInclude Include="Directory.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="UnderPeakDlgView.h" />
     <QtMoc Include="WaveFormCompensationDlgView.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;.\..\SWCommunication;.\..\common</IncludePath>

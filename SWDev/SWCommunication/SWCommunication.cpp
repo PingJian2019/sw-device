@@ -17,9 +17,22 @@ SWCommunication::~SWCommunication()
 	m_waitResConVar.notify_one();
 	m_downlinkList.QuitMessageList();
 
-	m_addmessageThread.join();
-	m_upLinkThread.join();
-	m_downLinkThread.join();
+	if (m_addmessageThread.joinable())
+	{
+		m_addmessageThread.join();
+	}
+	
+	if (m_upLinkThread.joinable())
+	{
+		m_upLinkThread.join();
+	}
+
+	if (m_downLinkThread.joinable())
+	{
+		m_downLinkThread.join();
+	}
+	
+	
 
 	if (m_communication)
 	{

@@ -10,5 +10,7 @@ public:
 
 	static QString GetLatestRecordDir();
 
+	static QString GetLatestFileName();
+
 	static bool CreateDir(QString dir);
 };
